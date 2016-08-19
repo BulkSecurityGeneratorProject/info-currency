@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: info-currency
+server:
+  port: 8083
