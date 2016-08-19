@@ -1,4 +1,4 @@
-package config;
+package pl.lodz.p.zzpj.config;
 
 /**
  * Application constants.
