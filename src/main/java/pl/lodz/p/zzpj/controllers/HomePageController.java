@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @RequestMapping("/")
-public class GuestController {
+public class HomePageController {
     private static final String WELCOME = "welcomePage";
 
     @RequestMapping(method = RequestMethod.GET)
