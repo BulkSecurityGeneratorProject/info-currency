@@ -31,6 +31,31 @@
     </div>
 </div>
 
+
+<div align="center" class="container">
+    <table class="table table-striped table-hover table-sm">
+        <tr>
+            <th> SYMBOL </th>
+            <td> {{currencyRates.code}}</td>
+        </tr>
+        <tr>
+            <th> NAZWA</th>
+            <td> {{currencyRates.currency}}</td>
+        </tr>
+        <tr class="success">
+            <td> DZISIEJSZE KURSY</td>
+        </tr>
+        <tr class="active">
+            <th> KUPNO</th>
+            <td> {{currencyRates.rates.rate.bid }}</td>
+        </tr>
+        <tr class="danger">
+            <th> SPRZEDAŻ</th>
+            <td> {{currencyRates.rates.rate.ask }}</td>
+        </tr>
+    </table>
+</div>
+
 </body>
 
 </html>
