@@ -9,3 +9,8 @@ spring:
   jpa:
       database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
       database: MYSQL
+  mail:
+    host: localhost
+    port: 25
+    username:
+    password:
