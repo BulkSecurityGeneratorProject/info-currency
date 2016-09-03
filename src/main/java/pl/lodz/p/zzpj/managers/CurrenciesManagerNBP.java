@@ -2,6 +2,7 @@ package pl.lodz.p.zzpj.managers;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Component;
+import pl.lodz.p.zzpj.DateUtils;
 import pl.lodz.p.zzpj.controllers.vm.CurrencyVM;
 import pl.lodz.p.zzpj.model.Currency;
 import pl.lodz.p.zzpj.model.ExchangeRatesSeries;
@@ -13,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * CurrenciesManager implementation that downloads currencies from Narodowy Bank Polski site.
@@ -23,8 +26,8 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
     private static final String COURSES_URL_PREFIX = "http://www.nbp.pl/kursy/xml/";
     private static final String LAST_COURSES_URL = "http://www.nbp.pl/kursy/xml/LastA.xml";
     private static final String CURRENCY_URL_PREFIX = "http://api.nbp.pl/api/exchangerates/rates/c/";
-    private static final String CURRENCY_DAILY_SUFFIX = "/today?format=xml";
     private static final String FORMAT_SUFFIX = "?format=xml";
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
 
     private XMLparser parser;
 
@@ -59,7 +62,8 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
         parser = new XMLparserJAXB();
         String url = null;
         if(request.isUpToDateRates() && (request.getCurrency() != null)) {
-            url = CURRENCY_URL_PREFIX + request.getCurrency() + CURRENCY_DAILY_SUFFIX;
+            makeSureDateIsValid(request);
+            url = CURRENCY_URL_PREFIX + request.getCurrency() + FORMAT_SUFFIX;
         } else if(request.getHistoricalDate() != null && (request.getCurrency() != null)) {
             url = CURRENCY_URL_PREFIX + request.getCurrency() + "/" + request.getHistoricalDate() + FORMAT_SUFFIX;
         } else {
@@ -71,6 +75,25 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
         } catch (JAXBException | IOException ex) {
             ex.printStackTrace();
             return null;
+        }
+    }
+
+    private void makeSureDateIsValid(CurrencyVM request) {
+        if(!request.isUpToDateRates()) return;
+
+        if(request.isUpToDateRates()) {
+            Date date = new Date();
+            if(date.getDay() != 6 || date.getDay() != 0) {
+                return;
+            } else {
+                request.setUpToDateRates(false);
+                while(date.getDay() == 6 || date.getDay() == 0) {
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.add(Calendar.DATE, -1);
+                    date = calendar.getTime();
+                    request.setHistoricalDate(DateUtils.getInstance().parseDateToString(date, DATE_FORMAT));
+                }
+            }
         }
     }
 

@@ -15,7 +15,6 @@ import java.util.Properties;
  * when there is no <code>spring.profiles.active</code> set in the environment or as command line argument.
  * If the value is not available in <code>application.yml</code> then <code>dev</code> profile will be used as default.
  * <p>
- * Created by piotr on 18.08.16.
  */
 public final class DefaultProfileUtil {
     private static final Logger log = LoggerFactory.getLogger(DefaultProfileUtil.class);
