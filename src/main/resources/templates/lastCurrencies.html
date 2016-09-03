@@ -10,7 +10,49 @@
 
 <body>
 
+<script>
+    function getRates() {
+        var currency = $("#currencyType").attr("value");
+        var upToDateRates;
+        var historicalDate;
+        var selectedRadio = $('input[name=optradio]').filter(':checked');
+        if(selectedRadio[0].id == "upToDateRates") {
+            upToDateRates = true;
+            historicalDate = null;
+        } else {
+            upToDateRates = false;
+            historicalDate = $("#dateText").val();
+        }
 
+        var JSONObject= {"currency":currency, "upToDateRates":upToDateRates, "historicalDate": historicalDate };
+
+        var request = $.ajax({
+            url: "/currencies/find",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(JSONObject),
+            dataType: "json",
+            success:function (response,textStatus,jqXHR) {
+                if(response.data) {
+                    $('#bid').html(response.data.rates.rate.bid);
+                    $('#ask').html(response.data.rates.rate.ask);
+                    $('#code').html(response.data.code);
+                    $('#currency').html(response.data.currency);
+                    $('#rateDate').html(response.data.rates.rate.effectiveDate);
+                    document.getElementById("rateTable").style.display = "block";
+                } else {
+                    document.getElementById("rateTable").style.display = "none";
+                    alert("Błędne parametry wyszukiwania!!!!")
+                }
+            },
+            error: function (errorResponse1) {
+                document.getElementById("rateTable").style.display = "none";
+                console.log(errorResponse1);
+                alert("Nieoczekiwany błąd");
+            }
+        });
+    }
+</script>
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -29,6 +71,84 @@
     <div class="jumbotron">
         <h1>Oto kursy walut z dnia dzisiejszego:</h1>
     </div>
+
+    <div class="dropdown">
+        <button id="currencyType" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Wybierz walutę:
+            <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+            <li><a href="#">EUR</a></li>
+            <li><a href="#">USD</a></li>
+        </ul>
+
+        <script>
+            $(".dropdown-menu li a").click(function(){
+
+                $("#currencyType").text("Wybrana waluta: " + $(this).text());
+                $("#currencyType").val($(this).text());
+
+            });
+        </script>
+    </div>
+
+    <div id="dateButtons" class="btn-group" data-toggle="buttons">
+        <label>
+            <input id="upToDateRates" type="radio" name="optradio">Aktualny kurs
+        </label>
+        <label>
+            <input id="historicalRates" type="radio" name="optradio">Historyczny kurs
+        </label>
+
+        <div id="calendar">
+            <div class="form-group">
+                <label for="date">Podaj datę w formacie: rrrr-mm-dd</label>
+                <input id="dateText" type="text" class="form-control" id="date">
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            document.getElementById("calendar").style.display = "none";
+            $("input[name=optradio]").click(function () {
+                if(this.id == "historicalRates") {
+                    document.getElementById("calendar").style.display = "inline-block";
+                } else {
+                    document.getElementById("calendar").style.display = "none";
+                }
+            });
+        </script>
+    </div>
+
+    <div id="submitButton">
+        <button type="button" class="btn btn-success" onclick="getRates()">Pobierz kurs</button>
+    </div>
+</div>
+
+<div id="rateTable" align="center" class="container">
+    <table class="table table-striped table-hover table-sm">
+        <tr>
+            <th> SYMBOL </th>
+            <td id="code"></td>
+        </tr>
+        <tr>
+            <th> NAZWA</th>
+            <td id="currency"></td>
+        </tr>
+        <tr class="success">
+            <th> KURS Z DNIA </th>
+            <td id="rateDate"></td>
+        </tr>
+        <tr class="active">
+            <th> KUPNO</th>
+            <td id="bid"></td>
+        </tr>
+        <tr class="danger">
+            <th> SPRZEDAŻ</th>
+            <td id="ask"></td>
+        </tr>
+    </table>
+
+    <script>
+        document.getElementById("rateTable").style.display = "none";
+    </script>
 </div>
 
 </body>

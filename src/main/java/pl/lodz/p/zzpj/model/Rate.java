@@ -31,8 +31,8 @@ public class Rate {
         this.no = value;
     }
 
-    public XMLGregorianCalendar getEffectiveDate() {
-        return effectiveDate;
+    public String getEffectiveDate() {
+        return effectiveDate.toString();
     }
 
     public void setEffectiveDate(XMLGregorianCalendar value) {

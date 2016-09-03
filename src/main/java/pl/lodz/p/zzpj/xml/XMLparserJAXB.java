@@ -28,10 +28,10 @@ public class XMLparserJAXB implements XMLparser {
     private static final String CURRENCY_DAILY_SUFFIX = "/today?format=xml";
 
     @Override
-    public ExchangeRatesSeries parseXMLtoObject(Currency symbol) throws JAXBException, IOException {
+    public ExchangeRatesSeries parseXMLtoObject(String url) throws JAXBException, IOException {
         jaxbContext = JAXBContext.newInstance(ExchangeRatesSeries.class);
         unmarshaller = jaxbContext.createUnmarshaller();
-        ExchangeRatesSeries unmarshal = (ExchangeRatesSeries) unmarshaller.unmarshal(new URL(buildURI(symbol.getName())));
+        ExchangeRatesSeries unmarshal = (ExchangeRatesSeries) unmarshaller.unmarshal(new URL(url));
         return unmarshal;
     }
 
