@@ -1,0 +1,130 @@
+<html xmlns:form="http://www.w3.org/1999/html">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+<script>
+    function calculate() {
+        var currency1 = $("#currencyType1").attr("value");
+        var currency2 = $("#currencyType2").attr("value");
+        var moneyValue = $("#valueText").value();
+
+        var JSONObject= {"currency1":currency1, "currency2":currency2, "moneyValue":moneyValue};
+
+        var request = $.ajax({
+            url: "/converter/calculate",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(JSONObject),
+            dataType: "json",
+            success: function (response) {
+                if(response.data) {
+                    $('#moneyValue').html(response.data);
+                    document.getElementById("convertedValue").style.display = "block";
+                } else {
+                    document.getElementById("convertedValue").style.display = "none";
+                    alert("Błędne parametry wyszukiwania!!!")
+                }
+            },
+            error: function (errorResponse1) {
+                document.getElementById("convertedValue").style.display = "none";
+                console.log(errorResponse1);
+                alert("Nieoczekiwany błąd");
+            }
+        });
+    }
+</script>
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Info-currency</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a href="/">Strona główna</a></li>
+            <li><a href="currencies">Waluty</a></li>
+            <li class="active"><a href="converter">Przelicznik walut</a></li>
+            <li><a href="#">Papiery wartościowe</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="jumbotron">
+        <h1>Przelicznik walut</h1>
+        <h5>Waluty są przewalutowywane na PLN w trakcie przeliczania.</h5>
+    </div>
+
+    Waluta 1:
+    <div class="dropdown">
+        <button id="currencyType1" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Wybierz
+            walutę:
+            <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+            <li><a href="#">EUR</a></li>
+            <li><a href="#">USD</a></li>
+        </ul>
+
+        <script>
+            $(".dropdown-menu li a").click(function () {
+
+                $("#currencyType1").text("Wybrana waluta: " + $(this).text());
+                $("#currencyType1").val($(this).text());
+
+            });
+        </script>
+    </div>
+
+    Waluta 2:
+    <div class="dropdown">
+        <button id="currencyType2" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Wybierz
+            walutę:
+            <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+            <li><a href="#">EUR</a></li>
+            <li><a href="#">USD</a></li>
+        </ul>
+
+        <script>
+            $(".dropdown-menu li a").click(function () {
+
+                $("#currencyType2").text("Wybrana waluta: " + $(this).text());
+                $("#currencyType2").val($(this).text());
+
+            });
+        </script>
+    </div>
+
+    <div id="valueInput">
+        <div class="form-group">
+            <label for="value">Podaj kwotę do przeliczenia</label>
+            <input id="valueText" type="text" class="form-control" id="value">
+        </div>
+    </div>
+
+    <div id="submitButton">
+        <button type="button" class="btn btn-success" onclick="calculate()">Przelicz</button>
+    </div>
+</div>
+
+<div id="convertedValue" align="center" class="container">
+    <table>
+        <tr>
+            <th>Po przeliczeniu: </th>
+            <td id="moneyValue"></td>
+        </tr>
+    </table>
+
+    <script>
+        document.getElementById("convertedValue").style.display = "none";
+    </script>
+</div>
+
+</body>

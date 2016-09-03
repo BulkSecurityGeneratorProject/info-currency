@@ -6,8 +6,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import pl.lodz.p.zzpj.controllers.vm.ConverterVM;
 import pl.lodz.p.zzpj.controllers.vm.CurrencyVM;
+import pl.lodz.p.zzpj.managers.Converter;
 import pl.lodz.p.zzpj.managers.CurrenciesManager;
+import pl.lodz.p.zzpj.model.ConverterResponse;
 import pl.lodz.p.zzpj.model.Currency;
 import pl.lodz.p.zzpj.model.CurrencyResponse;
 import pl.lodz.p.zzpj.xml.XMLparserJAXB;
@@ -26,9 +29,13 @@ public class CurrenciesController {
 
     private static final String LAST_CURRENCIES_VIEW = "lastCurrencies";
     private static final String SINGLE_CURRENCY_VIEW = "currency";
+    private static final String CONVERTER_VIEW = "converter";
 
     @Autowired
     private CurrenciesManager currenciesManager;
+
+    @Autowired
+    private Converter converter;
 
     @RequestMapping(value = "currencies", method = RequestMethod.GET)
     public String getLastCurrencies(Map<String, Object> model) {
@@ -53,6 +60,20 @@ public class CurrenciesController {
  //       return LAST_CURRENCIES_VIEW;
     }
 
+    @RequestMapping(value = "/converter")
+    public String getConverter() {
+        return CONVERTER_VIEW;
+    }
+
+    @RequestMapping(value = "/converter/calculate",
+            method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ConverterResponse> getConverterResult(@Valid @RequestBody ConverterVM converterVM, HttpServletRequest request) {
+        ConverterResponse response = new ConverterResponse();
+        response.setData(converter.convert(converterVM));
+        return new ResponseEntity<ConverterResponse>(response, HttpStatus.OK);
+    }
 
     public CurrenciesManager getCurrenciesManager() {
         return currenciesManager;

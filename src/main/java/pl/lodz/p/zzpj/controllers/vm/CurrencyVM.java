@@ -1,10 +1,5 @@
 package pl.lodz.p.zzpj.controllers.vm;
 
-import java.util.Date;
-
-/**
- * Created by piotr on 26.08.16.
- */
 public class CurrencyVM {
     private String currency;
     private boolean upToDateRates;
