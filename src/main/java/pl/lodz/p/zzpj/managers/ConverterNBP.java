@@ -1,5 +1,6 @@
 package pl.lodz.p.zzpj.managers;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.lodz.p.zzpj.controllers.vm.ConverterVM;
@@ -7,10 +8,10 @@ import pl.lodz.p.zzpj.controllers.vm.CurrencyVM;
 import pl.lodz.p.zzpj.model.ExchangeRatesSeries;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 @Component("converter")
 public class ConverterNBP implements Converter {
+    Logger logger = Logger.getLogger(ConverterNBP.class);
 
     private CurrencyVM currency1;
     private CurrencyVM currency2;
@@ -24,6 +25,7 @@ public class ConverterNBP implements Converter {
 
     @Override
     public String convert(ConverterVM converterVM) {
+        logger.info("convert invoked");
         setUpCurrencies(converterVM);
         setUpCurrencyRates();
 
@@ -34,6 +36,7 @@ public class ConverterNBP implements Converter {
     }
 
     private void setUpCurrencies(ConverterVM converterVM) {
+        logger.info("setUpCurrencies invoked");
         currency1 = new CurrencyVM();
         currency1.setUpToDateRates(true);
         currency1.setCurrency(converterVM.getCurrency1());
@@ -44,6 +47,7 @@ public class ConverterNBP implements Converter {
     }
 
     private void setUpCurrencyRates() {
+        logger.info("setUpCurrencyRates invoked");
         currencyRates1 = new ExchangeRatesSeries();
         currencyRates1 = currenciesManager.getCurrencyRate(currency1);
 

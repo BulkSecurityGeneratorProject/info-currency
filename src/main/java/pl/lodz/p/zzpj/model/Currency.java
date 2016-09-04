@@ -1,8 +1,15 @@
 package pl.lodz.p.zzpj.model;
 
 public enum Currency {
-    USD("usd"),
-    EUR("eur");
+    USD("USD"),
+    EUR("EUR"),
+    CHF("CHF"),
+    JPY("JPY"),
+    AUD("AUD"),
+    CAD("CAD"),
+    DKK("DKK"),
+    NOK("NOK"),
+    SEK("SEK");
 
     private String name;
 
