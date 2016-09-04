@@ -69,7 +69,7 @@ public class CurrenciesController {
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ConverterResponse> getConverterResult(@Valid @RequestBody ConverterVM converterVM, HttpServletRequest request) {
+    public ResponseEntity<ConverterResponse> getConverterResult(@Valid @RequestBody ConverterVM converterVM, HttpServletRequest request, Map<String, Object> model) {
         ConverterResponse response = new ConverterResponse();
         response.setData(converter.convert(converterVM));
         return new ResponseEntity<ConverterResponse>(response, HttpStatus.OK);

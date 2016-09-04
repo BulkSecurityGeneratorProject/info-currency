@@ -7,6 +7,7 @@ import pl.lodz.p.zzpj.controllers.vm.CurrencyVM;
 import pl.lodz.p.zzpj.model.ExchangeRatesSeries;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Component("converter")
 public class ConverterNBP implements Converter {
@@ -25,9 +26,10 @@ public class ConverterNBP implements Converter {
     public String convert(ConverterVM converterVM) {
         setUpCurrencies(converterVM);
         setUpCurrencyRates();
+
         moneyValue = BigDecimal.valueOf(Double.parseDouble(converterVM.getMoneyValue()));
-        moneyValue = moneyValue.divide(currencyRates1.getRates().getRate().getBid());
-        moneyValue = moneyValue.multiply(currencyRates2.getRates().getRate().getAsk());
+        moneyValue = moneyValue.multiply(currencyRates1.getRates().getRate().getMid());
+        moneyValue = moneyValue.divide(currencyRates2.getRates().getRate().getMid(), 2, BigDecimal.ROUND_DOWN);
         return moneyValue.toString();
     }
 
