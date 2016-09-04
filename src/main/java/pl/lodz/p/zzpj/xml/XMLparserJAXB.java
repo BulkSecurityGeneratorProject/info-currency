@@ -29,6 +29,7 @@ public class XMLparserJAXB implements XMLparser {
 
     @Override
     public ExchangeRatesSeries parseXMLtoObject(String url) throws JAXBException, IOException {
+        logger.info("parseXMLtoObject invoked");
         jaxbContext = JAXBContext.newInstance(ExchangeRatesSeries.class);
         unmarshaller = jaxbContext.createUnmarshaller();
         ExchangeRatesSeries unmarshal = (ExchangeRatesSeries) unmarshaller.unmarshal(new URL(url));
@@ -37,6 +38,7 @@ public class XMLparserJAXB implements XMLparser {
 
     @Override
     public String parseObjectToXML(ExchangeRatesSeries exchangeRatesSeries) throws JAXBException {
+        logger.info("parseObjectToXML invoked");
         jaxbContext = JAXBContext.newInstance(ExchangeRatesSeries.class);
         stringWriter = new StringWriter();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
