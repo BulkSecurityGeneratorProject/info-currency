@@ -55,6 +55,10 @@ public class Rate {
         this.ask = ask;
     }
 
+    public BigDecimal getMid() {
+        return bid.add(ask).divide(new BigDecimal(2));
+    }
+
     @Override
     public String toString() {
         return "Rate{" +

@@ -1,4 +1,4 @@
-<html xmlns:form="http://www.w3.org/1999/html">
+<html>
 
 <head>
     <meta charset="utf-8">
@@ -14,7 +14,8 @@
     function calculate() {
         var currency1 = $("#currencyType1").attr("value");
         var currency2 = $("#currencyType2").attr("value");
-        var moneyValue = $("#valueText").value();
+        var moneyValue = $("#valueText").val();
+        console.info($('#moneyValue').val());
 
         var JSONObject= {"currency1":currency1, "currency2":currency2, "moneyValue":moneyValue};
 
