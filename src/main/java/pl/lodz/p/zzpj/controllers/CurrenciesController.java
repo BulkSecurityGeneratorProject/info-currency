@@ -1,5 +1,6 @@
 package pl.lodz.p.zzpj.controllers;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,6 +28,8 @@ import java.util.Map;
 @Controller
 public class CurrenciesController {
 
+    Logger logger = Logger.getLogger(CurrenciesController.class);
+
     private static final String LAST_CURRENCIES_VIEW = "lastCurrencies";
     private static final String SINGLE_CURRENCY_VIEW = "currency";
     private static final String CONVERTER_VIEW = "converter";
@@ -39,12 +42,14 @@ public class CurrenciesController {
 
     @RequestMapping(value = "currencies", method = RequestMethod.GET)
     public String getLastCurrencies(Map<String, Object> model) {
+        logger.info("getLastCurrencies invoked");
         model.put("currenciesXML", currenciesManager.getLastCurrenciesXMLFromWebsite());
         return LAST_CURRENCIES_VIEW;
     }
 
     @RequestMapping(value = "currencies/{symbol}", method = RequestMethod.GET)
     public String getDailyCurrencyRate(@PathVariable String symbol, Map<String, Object> model) {
+        logger.info("getDailyCurrencyRate invoked");
         model.put("currencyRates", currenciesManager.getDailyCurrencyRateFromWebsite(Currency.valueOf(symbol.toUpperCase())));
         return SINGLE_CURRENCY_VIEW;
     }
@@ -54,6 +59,7 @@ public class CurrenciesController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CurrencyResponse> getCurrenciesRate(@Valid @RequestBody CurrencyVM currencyVM, HttpServletRequest request, Map<String, Object> model) {
+        logger.info("getCurrenciesRate invoked");
         CurrencyResponse response = new CurrencyResponse();
         response.setData(currenciesManager.getCurrencyRate(currencyVM));
         return new ResponseEntity<CurrencyResponse>(response, HttpStatus.OK);
@@ -62,6 +68,7 @@ public class CurrenciesController {
 
     @RequestMapping(value = "/converter")
     public String getConverter() {
+        logger.info("getConverter invoked");
         return CONVERTER_VIEW;
     }
 
@@ -70,6 +77,7 @@ public class CurrenciesController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ConverterResponse> getConverterResult(@Valid @RequestBody ConverterVM converterVM, HttpServletRequest request, Map<String, Object> model) {
+        logger.info("getConverterResult invoked");
         ConverterResponse response = new ConverterResponse();
         response.setData(converter.convert(converterVM));
         return new ResponseEntity<ConverterResponse>(response, HttpStatus.OK);

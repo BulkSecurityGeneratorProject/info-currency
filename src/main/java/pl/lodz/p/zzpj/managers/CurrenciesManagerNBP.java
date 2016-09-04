@@ -1,8 +1,9 @@
 package pl.lodz.p.zzpj.managers;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
-import pl.lodz.p.zzpj.DateUtils;
+import pl.lodz.p.zzpj.utils.DateUtils;
 import pl.lodz.p.zzpj.controllers.vm.CurrencyVM;
 import pl.lodz.p.zzpj.model.Currency;
 import pl.lodz.p.zzpj.model.ExchangeRatesSeries;
@@ -12,7 +13,6 @@ import pl.lodz.p.zzpj.xml.XMLparserJAXB;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
@@ -22,6 +22,7 @@ import java.util.Date;
  */
 @Component("currenciesManager")
 public class CurrenciesManagerNBP implements CurrenciesManager {
+    Logger logger = Logger.getLogger(CurrenciesManagerNBP.class);
 
     private static final String COURSES_URL_PREFIX = "http://www.nbp.pl/kursy/xml/";
     private static final String LAST_COURSES_URL = "http://www.nbp.pl/kursy/xml/LastA.xml";
@@ -33,6 +34,7 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
 
     @Override
     public String getLastCurrenciesXMLFromWebsite() {
+        logger.info("getLastCurrenciesXMLFromWebsite invoked");
         String content = "";
         URL url = null;
         try {
@@ -48,6 +50,7 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
 
     @Override
     public ExchangeRatesSeries getDailyCurrencyRateFromWebsite(Currency currencySymbol) {
+        logger.info("getDailyCurrencyRateFromWebsite invoked");
 //        parser = new XMLparserJAXB();
 //        try {
 //            return parser.parseXMLtoObject(currencySymbol);
@@ -59,6 +62,7 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
 
     @Override
     public ExchangeRatesSeries getCurrencyRate(CurrencyVM request) {
+        logger.info("getCurrencyRate invoked");
         parser = new XMLparserJAXB();
         String url = null;
         if(request.isUpToDateRates() && (request.getCurrency() != null)) {
@@ -79,6 +83,7 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
     }
 
     private void makeSureDateIsValid(CurrencyVM request) {
+        logger.info("makeSureDateIsValid invoked");
         if(!request.isUpToDateRates()) return;
 
         if(request.isUpToDateRates()) {

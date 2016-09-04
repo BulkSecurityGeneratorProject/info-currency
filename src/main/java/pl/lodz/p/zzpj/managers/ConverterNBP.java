@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 
 @Component("converter")
 public class ConverterNBP implements Converter {
-
     Logger logger = Logger.getLogger(ConverterNBP.class);
 
     private CurrencyVM currency1;
@@ -26,7 +25,7 @@ public class ConverterNBP implements Converter {
 
     @Override
     public String convert(ConverterVM converterVM) {
-        logger.info("convert method");
+        logger.info("convert invoked");
         setUpCurrencies(converterVM);
         setUpCurrencyRates();
 
@@ -37,6 +36,7 @@ public class ConverterNBP implements Converter {
     }
 
     private void setUpCurrencies(ConverterVM converterVM) {
+        logger.info("setUpCurrencies invoked");
         currency1 = new CurrencyVM();
         currency1.setUpToDateRates(true);
         currency1.setCurrency(converterVM.getCurrency1());
@@ -47,6 +47,7 @@ public class ConverterNBP implements Converter {
     }
 
     private void setUpCurrencyRates() {
+        logger.info("setUpCurrencyRates invoked");
         currencyRates1 = new ExchangeRatesSeries();
         currencyRates1 = currenciesManager.getCurrencyRate(currency1);
 
