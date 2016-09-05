@@ -104,6 +104,9 @@
         <label>
             <input id="historicalRates" type="radio" name="optradio">Historyczny kurs
         </label>
+        <label>
+            <input id="periodRates" type="radio" name="optradio">Kurs z wybranego przedziału
+        </label>
 
         <div id="calendar">
             <div class="form-group">
@@ -119,6 +122,25 @@
                     document.getElementById("calendar").style.display = "inline-block";
                 } else {
                     document.getElementById("calendar").style.display = "none";
+                }
+            });
+        </script>
+
+        <div id="interval">
+            <div class="form-group">
+                <label for="date">Podaj daty w formacie: rrrr-mm-dd</label>
+                <input id="lowDateText" type="text" class="form-control" id="lowDate">
+                <input id="highDateText" type="text" class="form-control" id="highDate">
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            document.getElementById("interval").style.display = "none";
+            $("input[name=optradio]").click(function () {
+                if(this.id == "periodRates") {
+                    document.getElementById("interval").style.display = "inline-block";
+                } else {
+                    document.getElementById("interval").style.display = "none";
                 }
             });
         </script>
