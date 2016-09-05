@@ -179,7 +179,8 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
         return DateUtils.getInstance().parseDateToString(currDate, DATE_FORMAT);
     }
 
-    private ArrayList<ExchangeRatesSeries> getRangeRates(CurrencyVM request) {
+    @Override
+    public ArrayList<ExchangeRatesSeries> getRangeRates(CurrencyVM request) {
         logger.info("getRangeRates invoked");
         String maxDate = request.getHighHistDate();
         String currentDate = request.getLowHistDate();
