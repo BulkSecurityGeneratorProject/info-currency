@@ -162,22 +162,28 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
         logger.info("validateDate invoked");
         Calendar calendar = Calendar.getInstance();
         Date currDate = null;
+        boolean isValid = false;
         try {
             currDate = DateUtils.getInstance().parseStringToDate(currentDate, DATE_FORMAT);
             calendar.setTime(currDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        logger.info(notWorkingDates.contains(currentDate));
-        if(notWorkingDates.contains(currentDate)) {
-            logger.info(currentDate);
-            calendar.add(Calendar.DATE, -1);
-            currDate = calendar.getTime();
-            logger.info(DateUtils.getInstance().parseDateToString(currDate, DATE_FORMAT));
-        }
-        while (currDate.getDay() == 6 || currDate.getDay() == 0) {
-            calendar.add(Calendar.DATE, -1);
-            currDate = calendar.getTime();
+        while(!isValid) {
+            if(notWorkingDates.contains(currentDate)) {
+                calendar.add(Calendar.DATE, -1);
+                currDate = calendar.getTime();
+            }
+            while(currDate.getDay() == 6 || currDate.getDay() == 0) {
+                calendar.add(Calendar.DATE, -1);
+                currDate = calendar.getTime();
+                currentDate = DateUtils.getInstance().parseDateToString(currDate, DATE_FORMAT);
+            }
+            if(!notWorkingDates.contains(DateUtils.getInstance().parseDateToString(currDate, DATE_FORMAT))) {
+                isValid = true;
+            } else {
+                isValid = false;
+            }
         }
 
         return DateUtils.getInstance().parseDateToString(currDate, DATE_FORMAT);
