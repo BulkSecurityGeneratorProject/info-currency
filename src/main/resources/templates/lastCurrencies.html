@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
 </head>
 
 <body>
@@ -45,13 +47,59 @@
             data: JSON.stringify(JSONObject),
             dataType: "json",
             success:function (response,textStatus,jqXHR) {
-                if(response.data) {
+                if(response.data.length > 0) {
+                    //var jsonData = $.parseJSON(response);
+                    var dates = [];
+                    var bids = [];
+                    var asks = [];
+                    for(i = 0; i < response.data.length; i++) {
+                        dates[i] = response.data[i].rates.rate.effectiveDate;
+                        bids[i] = response.data[i].rates.rate.bid;
+                        asks[i] = response.data[i].rates.rate.ask;
+                    }
+                    $('#ratesChart').highcharts({
+                        chart: {
+                            type: 'line'
+                        },
+                        title: {
+                            text: 'Historia kursu waluty ' + JSONObject.currency
+                        },
+                        subtitle: {
+                            text: JSONObject.lowHistDate + ' - ' + JSONObject.highHistDate
+                        },
+                        xAxis: {
+                            categories: dates
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Wartość'
+                            }
+                        },
+                        plotOptions: {
+                            line: {
+                                dataLabels: {
+                                    enabled: true
+                                },
+                                enableMouseTracking: false
+                            }
+                        },
+                        series: [{
+                            name: 'Kupno',
+                            data: bids
+                        }, {
+                            name: 'Sprzedaż',
+                            data: asks
+                        }]
+                    });
+                    document.getElementById("ratesChart").style.display = "table";
+                } else if(response.data) {
                     $('#bid').html(response.data.rates.rate.bid);
                     $('#ask').html(response.data.rates.rate.ask);
                     $('#code').html(response.data.code);
                     $('#currency').html(response.data.currency);
                     $('#rateDate').html(response.data.rates.rate.effectiveDate);
                     document.getElementById("rateTable").style.display = "block";
+                    document.getElementById("ratesChart").style.display = "none";
                 } else {
                     document.getElementById("rateTable").style.display = "none";
                     alert("Błędne parametry wyszukiwania!!!!")
@@ -189,6 +237,12 @@
 
     <script>
         document.getElementById("rateTable").style.display = "none";
+    </script>
+</div>
+
+<div id="ratesChart" style="min-width: 600px; height: 400px; margin: 0 auto">
+    <script>
+        document.getElementById("ratesChart").style.display = "none";
     </script>
 </div>
 

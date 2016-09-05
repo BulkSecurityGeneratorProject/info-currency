@@ -101,6 +101,10 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
 
     private void makeSureDateIsValid(CurrencyVM request) {
         logger.info("makeSureDateIsValid invoked");
+        if(!request.isUpToDateRates() && request.getLowHistDate() != null) {
+
+        }
+
         if(!request.isUpToDateRates()) return;
 
         if(request.isUpToDateRates()) {
@@ -134,11 +138,11 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
         long howManyDays = calculateHowManyDays(currentDate, maxDate);
         parser = new XMLparserJAXB();
         String url = null;
-        //makeSureDateIsValid(request);
 
         for(int i = 0; i <= howManyDays; i++) {
-            currentDate = setCurrentDate(currentDate, request.getLowHistDate());
+            makeSureDateIsValid(request);
             url = defineURL(request.getCurrency(), currentDate);
+            logger.info(url);
 
             try {
                 rateForCurrentDate = parser.parseXMLtoObject(url);
@@ -147,14 +151,14 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
                 ex.printStackTrace();
                 return null;
             }
+            currentDate = setCurrentDate(currentDate);
         }
         return ratesForDateRange;
     }
 
-    private String setCurrentDate(String currentDate, String lowHistDate) {
+    private String setCurrentDate(String currentDate) {
         Calendar calendar = Calendar.getInstance();
         Date currDate = null;
-        if(currentDate.compareTo(lowHistDate) != 0) {
             try {
                 currDate = DateUtils.getInstance().parseStringToDate(currentDate, DATE_FORMAT);
             } catch (ParseException e) {
@@ -163,9 +167,6 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
             calendar.setTime(currDate);
             calendar.add(Calendar.DATE, 1);
             return DateUtils.getInstance().parseDateToString(calendar.getTime(), DATE_FORMAT);
-        } else {
-            return currentDate;
-        }
     }
 
     private long calculateHowManyDays(String lowDate, String highDate) {

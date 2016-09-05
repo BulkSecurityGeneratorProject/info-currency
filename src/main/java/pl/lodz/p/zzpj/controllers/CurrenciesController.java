@@ -61,6 +61,7 @@ public class CurrenciesController {
     public ResponseEntity<CurrencyResponse> getCurrenciesRate(@Valid @RequestBody CurrencyVM currencyVM, HttpServletRequest request, Map<String, Object> model) {
         logger.info("getCurrenciesRate invoked");
         CurrencyResponse response = new CurrencyResponse();
+        logger.info(currencyVM.toString());
         response.setData(currenciesManager.getRatesDependsOnParams(currencyVM));
         //response.setData(currenciesManager.getCurrencyRate(currencyVM));
         return new ResponseEntity<CurrencyResponse>(response, HttpStatus.OK);
