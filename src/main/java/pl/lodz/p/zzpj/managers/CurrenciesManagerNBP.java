@@ -1,15 +1,11 @@
 package pl.lodz.p.zzpj.managers;
 
-import ch.qos.logback.core.util.TimeUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import org.apache.tomcat.jni.Time;
-import org.h2.mvstore.DataUtils;
 import org.springframework.stereotype.Component;
-import pl.lodz.p.zzpj.utils.DateUtils;
 import pl.lodz.p.zzpj.controllers.vm.CurrencyVM;
-import pl.lodz.p.zzpj.model.Currency;
 import pl.lodz.p.zzpj.model.ExchangeRatesSeries;
+import pl.lodz.p.zzpj.utils.DateUtils;
 import pl.lodz.p.zzpj.xml.XMLparser;
 import pl.lodz.p.zzpj.xml.XMLparserJAXB;
 
@@ -17,12 +13,14 @@ import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -78,18 +76,6 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
             e.printStackTrace();
         }
         return content;
-    }
-
-    @Override
-    public ExchangeRatesSeries getDailyCurrencyRateFromWebsite(Currency currencySymbol) {
-        logger.info("getDailyCurrencyRateFromWebsite invoked");
-//        parser = new XMLparserJAXB();
-//        try {
-//            return parser.parseXMLtoObject(currencySymbol);
-//        } catch (JAXBException | IOException e) {
-//            e.printStackTrace();
-//        }
-        return null;
     }
 
     @Override

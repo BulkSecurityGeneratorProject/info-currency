@@ -2,15 +2,14 @@ package pl.lodz.p.zzpj.aspects;
 
 import org.apache.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
 @Aspect
 @Component
-public class AspectMeasureTool {
-    Logger logger = Logger.getLogger(AspectMeasureTool.class);
+public class AspectsPoweredMeasureTool {
+    Logger logger = Logger.getLogger(AspectsPoweredMeasureTool.class);
     StopWatch stopWatch;
 
     @Pointcut("execution(* pl.lodz.p.zzpj.managers.ConverterNBP.convert(..))")

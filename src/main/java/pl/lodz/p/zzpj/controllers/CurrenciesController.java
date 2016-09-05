@@ -50,7 +50,6 @@ public class CurrenciesController {
     @RequestMapping(value = "currencies/{symbol}", method = RequestMethod.GET)
     public String getDailyCurrencyRate(@PathVariable String symbol, Map<String, Object> model) {
         logger.info("getDailyCurrencyRate invoked");
-        model.put("currencyRates", currenciesManager.getDailyCurrencyRateFromWebsite(Currency.valueOf(symbol.toUpperCase())));
         return SINGLE_CURRENCY_VIEW;
     }
 
