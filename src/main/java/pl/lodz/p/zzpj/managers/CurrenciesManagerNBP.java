@@ -14,14 +14,13 @@ import pl.lodz.p.zzpj.xml.XMLparser;
 import pl.lodz.p.zzpj.xml.XMLparserJAXB;
 
 import javax.xml.bind.JAXBException;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -101,9 +100,6 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
 
     private void makeSureDateIsValid(CurrencyVM request) {
         logger.info("makeSureDateIsValid invoked");
-        if(!request.isUpToDateRates() && request.getLowHistDate() != null) {
-
-        }
 
         if(!request.isUpToDateRates()) return;
 
@@ -129,10 +125,29 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
         return url;
     }
 
+    private String validateDate(String currentDate) {
+        Calendar calendar = Calendar.getInstance();
+        Date currDate = null;
+        try {
+            currDate = DateUtils.getInstance().parseStringToDate(currentDate, DATE_FORMAT);
+            calendar.setTime(currDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        while(currDate.getDay() == 6 || currDate.getDay() == 0) {
+            logger.info(currDate.getDay());
+            calendar.add(Calendar.DATE, -1);
+            currDate = calendar.getTime();
+        }
+        logger.info(DateUtils.getInstance().parseDateToString(currDate, DATE_FORMAT));
+        return DateUtils.getInstance().parseDateToString(currDate, DATE_FORMAT);
+    }
+
     private ArrayList<ExchangeRatesSeries> getRangeRates(CurrencyVM request) {
         logger.info("getRangeRates invoked");
         String maxDate = request.getHighHistDate();
         String currentDate = request.getLowHistDate();
+        String tempWeekDate = null;
         ExchangeRatesSeries rateForCurrentDate;
         ArrayList<ExchangeRatesSeries> ratesForDateRange = new ArrayList<>();
         long howManyDays = calculateHowManyDays(currentDate, maxDate);
@@ -140,12 +155,19 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
         String url = null;
 
         for(int i = 0; i <= howManyDays; i++) {
-            makeSureDateIsValid(request);
-            url = defineURL(request.getCurrency(), currentDate);
+            tempWeekDate = validateDate(currentDate);
+            logger.info("cur" + currentDate);
+            logger.info("temp" + tempWeekDate);
+            if(currentDate.compareTo(tempWeekDate) == 0) {
+                url = defineURL(request.getCurrency(), currentDate);
+            } else {
+                url = defineURL(request.getCurrency(), tempWeekDate);
+            }
             logger.info(url);
 
             try {
                 rateForCurrentDate = parser.parseXMLtoObject(url);
+                switchDate(rateForCurrentDate, currentDate);
                 ratesForDateRange.add(rateForCurrentDate);
             } catch (JAXBException | IOException ex) {
                 ex.printStackTrace();
@@ -154,6 +176,24 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
             currentDate = setCurrentDate(currentDate);
         }
         return ratesForDateRange;
+    }
+
+    private void switchDate(ExchangeRatesSeries rate, String date) {
+        Date parsedDate = null;
+        try {
+            parsedDate = DateUtils.getInstance().parseStringToDate(date, DATE_FORMAT);
+            if(rate.getRates().getRate().getEffectiveDate().toString().compareTo(parsedDate.toString()) != 0) {
+                GregorianCalendar gregorianCalendar = (GregorianCalendar) GregorianCalendar.getInstance();
+                gregorianCalendar.setTime(parsedDate);
+                rate.getRates().getRate().setEffectiveDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar));
+                logger.info(rate.getRates().getRate().getEffectiveDate());
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (DatatypeConfigurationException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private String setCurrentDate(String currentDate) {
