@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 public interface CurrenciesManager {
     String getLastCurrenciesXMLFromWebsite();
-    ExchangeRatesSeries getDailyCurrencyRateFromWebsite(Currency currencySymbol);
     ExchangeRatesSeries getCurrencyRate(CurrencyVM request);
     Object getRatesDependsOnParams(CurrencyVM request);
     ArrayList<ExchangeRatesSeries> getRangeRates(CurrencyVM requste);

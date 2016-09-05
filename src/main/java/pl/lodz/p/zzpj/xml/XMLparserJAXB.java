@@ -1,6 +1,7 @@
 package pl.lodz.p.zzpj.xml;
 
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
 import org.xml.sax.InputSource;
 import pl.lodz.p.zzpj.model.Currency;
 import pl.lodz.p.zzpj.model.ExchangeRatesSeries;
@@ -16,6 +17,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+@Component("XMLparser")
 public class XMLparserJAXB implements XMLparser {
     Logger logger = Logger.getLogger(XMLparserJAXB.class);
 
