@@ -62,7 +62,7 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
 
     @Override
     public ExchangeRatesSeries getCurrencyRate(CurrencyVM request) {
-        logger.info("getCurrencyRate invoked");
+        logger.info("getCurrencyRate invoked" );
         parser = new XMLparserJAXB();
         String url = null;
         if(request.isUpToDateRates() && (request.getCurrency() != null)) {

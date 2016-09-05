@@ -15,16 +15,28 @@
         var currency = $("#currencyType").attr("value");
         var upToDateRates;
         var historicalDate;
+        var lowHistDate;
+        var highHistDate;
         var selectedRadio = $('input[name=optradio]').filter(':checked');
         if(selectedRadio[0].id == "upToDateRates") {
             upToDateRates = true;
             historicalDate = null;
+            lowHistDate = null;
+            highHistDate = null;
+        } else if(selectedRadio[0].id == "periodRates") {
+            upToDateRates = false;
+            highHistDate = null;
+            lowHistDate = $("#lowDateText").val();
+            highHistDate = $("#highDateText").val();
         } else {
             upToDateRates = false;
             historicalDate = $("#dateText").val();
+            lowHistDate = null;
+            highHistDate = null;
         }
 
-        var JSONObject= {"currency":currency, "upToDateRates":upToDateRates, "historicalDate": historicalDate };
+        var JSONObject= {"currency":currency, "upToDateRates":upToDateRates, "historicalDate": historicalDate , "lowHistDate": lowHistDate ,
+                            "highHistDate": highHistDate};
 
         var request = $.ajax({
             url: "/currencies/find",
@@ -105,7 +117,7 @@
             <input id="historicalRates" type="radio" name="optradio">Historyczny kurs
         </label>
         <label>
-            <input id="periodRates" type="radio" name="optradio">Kurs z wybranego przedziału
+            <input id="periodRates" type="radio" name="optradio">Kurs z wybranego przedziału czasu
         </label>
 
         <div id="calendar">
