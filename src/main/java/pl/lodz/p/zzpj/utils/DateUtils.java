@@ -34,4 +34,5 @@ public class DateUtils {
         DateFormat dateFormat = new SimpleDateFormat(format);
         return dateFormat.parse(date);
     }
+
 }

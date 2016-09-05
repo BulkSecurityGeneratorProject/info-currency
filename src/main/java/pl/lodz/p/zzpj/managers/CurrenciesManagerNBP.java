@@ -37,8 +37,32 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
     private static final String CURRENCY_URL_PREFIX = "http://api.nbp.pl/api/exchangerates/rates/c/";
     private static final String FORMAT_SUFFIX = "?format=xml";
     private static final String DATE_FORMAT = "yyyy-MM-dd";
+    private ArrayList<String> notWorkingDates = new ArrayList<>();
 
     private XMLparser parser;
+
+    private void setUpNotWorkingDates() {
+        notWorkingDates.add("2016-01-01");
+        notWorkingDates.add("2016-01-06");
+        notWorkingDates.add("2016-03-25");
+        notWorkingDates.add("2016-03-28");
+        notWorkingDates.add("2016-05-03");
+        notWorkingDates.add("2016-05-26");
+        notWorkingDates.add("2016-08-15");
+        notWorkingDates.add("2016-11-01");
+        notWorkingDates.add("2016-11-11");
+        notWorkingDates.add("2016-12-26");
+        notWorkingDates.add("2017-01-06");
+        notWorkingDates.add("2017-04-14");
+        notWorkingDates.add("2017-04-17");
+        notWorkingDates.add("2017-05-01");
+        notWorkingDates.add("2017-05-03");
+        notWorkingDates.add("2017-06-15");
+        notWorkingDates.add("2017-08-15");
+        notWorkingDates.add("2017-11-01");
+        notWorkingDates.add("2017-12-25");
+        notWorkingDates.add("2017-12-26");
+    };
 
     @Override
     public String getLastCurrenciesXMLFromWebsite() {
@@ -75,9 +99,11 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
         String url = null;
         if(request.isUpToDateRates() && (request.getCurrency() != null)) {
             makeSureDateIsValid(request);
-            url = CURRENCY_URL_PREFIX + request.getCurrency() + FORMAT_SUFFIX;
+            defineURL(request.getCurrency(), request.getHistoricalDate());
+            //url = CURRENCY_URL_PREFIX + request.getCurrency() + FORMAT_SUFFIX;
         } else if(request.getHistoricalDate() != null && (request.getCurrency() != null)) {
-            url = CURRENCY_URL_PREFIX + request.getCurrency() + "/" + request.getHistoricalDate() + FORMAT_SUFFIX;
+            defineURL(request.getCurrency(), request.getHistoricalDate());
+            //url = CURRENCY_URL_PREFIX + request.getCurrency() + "/" + request.getHistoricalDate() + FORMAT_SUFFIX;
         } else {
             return null;
         }
@@ -93,6 +119,7 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
     @Override
     public Object getRatesDependsOnParams(CurrencyVM request) {
         logger.info("getRatesDependsOnParams invoked" );
+        setUpNotWorkingDates();
         if(request.getLowHistDate() != null && request.getHighHistDate() != null) {
             return getRangeRates(request);
         } else {
@@ -123,7 +150,11 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
 
     private String defineURL(String currency, String historicalDate) {
         String url;
-        url = CURRENCY_URL_PREFIX + currency + "/" + historicalDate + FORMAT_SUFFIX;
+        if(historicalDate == null) {
+            url = CURRENCY_URL_PREFIX + currency + FORMAT_SUFFIX;
+        } else {
+            url = CURRENCY_URL_PREFIX + currency + "/" + historicalDate + FORMAT_SUFFIX;
+        }
         return url;
     }
 
@@ -136,7 +167,11 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        while(currDate.getDay() == 6 || currDate.getDay() == 0) {
+        if(notWorkingDates.contains(currentDate)) {
+            calendar.add(Calendar.DATE, -1);
+            currDate = calendar.getTime();
+        }
+        while (currDate.getDay() == 6 || currDate.getDay() == 0) {
             calendar.add(Calendar.DATE, -1);
             currDate = calendar.getTime();
         }
@@ -188,7 +223,6 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
                                                  gc.get(Calendar.MONTH) + 1,
                                                  gc.get(Calendar.DAY_OF_MONTH),
                                                  DatatypeConstants.FIELD_UNDEFINED));
-                logger.info(rate.getRates().getRate().getEffectiveDate());
             }
         } catch (ParseException e) {
             e.printStackTrace();
