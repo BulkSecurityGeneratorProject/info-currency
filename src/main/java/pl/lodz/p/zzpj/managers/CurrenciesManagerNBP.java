@@ -97,13 +97,14 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
         logger.info("getCurrencyRate invoked" );
         parser = new XMLparserJAXB();
         String url = null;
+
+        setUpNotWorkingDates();
+
         if(request.isUpToDateRates() && (request.getCurrency() != null)) {
             makeSureDateIsValid(request);
-            defineURL(request.getCurrency(), request.getHistoricalDate());
-            //url = CURRENCY_URL_PREFIX + request.getCurrency() + FORMAT_SUFFIX;
+            url = defineURL(request.getCurrency(), request.getHistoricalDate());
         } else if(request.getHistoricalDate() != null && (request.getCurrency() != null)) {
-            defineURL(request.getCurrency(), request.getHistoricalDate());
-            //url = CURRENCY_URL_PREFIX + request.getCurrency() + "/" + request.getHistoricalDate() + FORMAT_SUFFIX;
+            url = defineURL(request.getCurrency(), validateDate(request.getHistoricalDate()));
         } else {
             return null;
         }
@@ -119,7 +120,6 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
     @Override
     public Object getRatesDependsOnParams(CurrencyVM request) {
         logger.info("getRatesDependsOnParams invoked" );
-        setUpNotWorkingDates();
         if(request.getLowHistDate() != null && request.getHighHistDate() != null) {
             return getRangeRates(request);
         } else {
@@ -159,6 +159,7 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
     }
 
     private String validateDate(String currentDate) {
+        logger.info("validateDate invoked");
         Calendar calendar = Calendar.getInstance();
         Date currDate = null;
         try {
@@ -167,9 +168,12 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        logger.info(notWorkingDates.contains(currentDate));
         if(notWorkingDates.contains(currentDate)) {
+            logger.info(currentDate);
             calendar.add(Calendar.DATE, -1);
             currDate = calendar.getTime();
+            logger.info(DateUtils.getInstance().parseDateToString(currDate, DATE_FORMAT));
         }
         while (currDate.getDay() == 6 || currDate.getDay() == 0) {
             calendar.add(Calendar.DATE, -1);
@@ -190,6 +194,8 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
         long howManyDays = calculateHowManyDays(currentDate, maxDate);
         parser = new XMLparserJAXB();
         String url = null;
+
+        setUpNotWorkingDates();
 
         for(int i = 0; i <= howManyDays; i++) {
             tempWeekDate = validateDate(currentDate);

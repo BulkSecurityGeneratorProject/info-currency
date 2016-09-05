@@ -16,6 +16,8 @@ import pl.lodz.p.zzpj.controllers.HomePageController;
 import pl.lodz.p.zzpj.controllers.vm.CurrencyVM;
 import pl.lodz.p.zzpj.model.ExchangeRatesSeries;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import static org.junit.Assert.*;
 
@@ -65,4 +67,23 @@ public class CurrenciesManagerNBPTest {
         assertEquals(givenRates.get(0).getRates().getRate().getBid(), givenRates.get(1).getRates().getRate().getBid());
         assertEquals(givenRates.get(0).getRates().getRate().getMid(), givenRates.get(1).getRates().getRate().getMid());
     }
+
+    @Test
+    public void shouldTakeRateFromAnotherDayBecauseOfNotWorkingDay() {
+        //given
+        request.setCurrency("USD");
+        request.setHistoricalDate("2016-05-03");
+        Double bid = 3.7996;
+        Double ask = 3.8764;
+        BigDecimal bidFromDayBefore = new BigDecimal(bid);
+        bidFromDayBefore = bidFromDayBefore.setScale(4, BigDecimal.ROUND_UP);
+        BigDecimal askFromDayBefore = new BigDecimal(ask);
+        askFromDayBefore = askFromDayBefore.setScale(4, BigDecimal.ROUND_UP);
+        //when
+        givenRate = currManager.getCurrencyRate(request);
+        //then
+        assertEquals(bidFromDayBefore, givenRate.getRates().getRate().getBid());
+        assertEquals(askFromDayBefore, givenRate.getRates().getRate().getAsk());
+    }
+
 }
