@@ -15,7 +15,9 @@ import pl.lodz.p.zzpj.xml.XMLparserJAXB;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -135,11 +137,10 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
             e.printStackTrace();
         }
         while(currDate.getDay() == 6 || currDate.getDay() == 0) {
-            logger.info(currDate.getDay());
             calendar.add(Calendar.DATE, -1);
             currDate = calendar.getTime();
         }
-        logger.info(DateUtils.getInstance().parseDateToString(currDate, DATE_FORMAT));
+
         return DateUtils.getInstance().parseDateToString(currDate, DATE_FORMAT);
     }
 
@@ -156,14 +157,11 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
 
         for(int i = 0; i <= howManyDays; i++) {
             tempWeekDate = validateDate(currentDate);
-            logger.info("cur" + currentDate);
-            logger.info("temp" + tempWeekDate);
             if(currentDate.compareTo(tempWeekDate) == 0) {
                 url = defineURL(request.getCurrency(), currentDate);
             } else {
                 url = defineURL(request.getCurrency(), tempWeekDate);
             }
-            logger.info(url);
 
             try {
                 rateForCurrentDate = parser.parseXMLtoObject(url);
@@ -183,9 +181,13 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
         try {
             parsedDate = DateUtils.getInstance().parseStringToDate(date, DATE_FORMAT);
             if(rate.getRates().getRate().getEffectiveDate().toString().compareTo(parsedDate.toString()) != 0) {
-                GregorianCalendar gregorianCalendar = (GregorianCalendar) GregorianCalendar.getInstance();
-                gregorianCalendar.setTime(parsedDate);
-                rate.getRates().getRate().setEffectiveDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar));
+                GregorianCalendar gc = (GregorianCalendar) GregorianCalendar.getInstance();
+                gc.setTime(parsedDate);
+                rate.getRates().getRate().setEffectiveDate(DatatypeFactory.newInstance()
+                        .newXMLGregorianCalendarDate(gc.get(Calendar.YEAR),
+                                                 gc.get(Calendar.MONTH) + 1,
+                                                 gc.get(Calendar.DAY_OF_MONTH),
+                                                 DatatypeConstants.FIELD_UNDEFINED));
                 logger.info(rate.getRates().getRate().getEffectiveDate());
             }
         } catch (ParseException e) {
