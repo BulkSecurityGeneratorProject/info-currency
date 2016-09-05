@@ -1,7 +1,10 @@
 package pl.lodz.p.zzpj.managers;
 
+import ch.qos.logback.core.util.TimeUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.apache.tomcat.jni.Time;
+import org.h2.mvstore.DataUtils;
 import org.springframework.stereotype.Component;
 import pl.lodz.p.zzpj.utils.DateUtils;
 import pl.lodz.p.zzpj.controllers.vm.CurrencyVM;
@@ -14,8 +17,12 @@ import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * CurrenciesManager implementation that downloads currencies from Narodowy Bank Polski site.
@@ -82,6 +89,16 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
         }
     }
 
+    @Override
+    public Object getRatesDependsOnParams(CurrencyVM request) {
+        logger.info("getRatesDependsOnParams invoked" );
+        if(request.getLowHistDate() != null && request.getHighHistDate() != null) {
+            return getRangeRates(request);
+        } else {
+            return getCurrencyRate(request);
+        }
+    }
+
     private void makeSureDateIsValid(CurrencyVM request) {
         logger.info("makeSureDateIsValid invoked");
         if(!request.isUpToDateRates()) return;
@@ -100,6 +117,68 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
                 }
             }
         }
+    }
+
+    private String defineURL(String currency, String historicalDate) {
+        String url;
+        url = CURRENCY_URL_PREFIX + currency + "/" + historicalDate + FORMAT_SUFFIX;
+        return url;
+    }
+
+    private ArrayList<ExchangeRatesSeries> getRangeRates(CurrencyVM request) {
+        logger.info("getRangeRates invoked");
+        String maxDate = request.getHighHistDate();
+        String currentDate = request.getLowHistDate();
+        ExchangeRatesSeries rateForCurrentDate;
+        ArrayList<ExchangeRatesSeries> ratesForDateRange = new ArrayList<>();
+        long howManyDays = calculateHowManyDays(currentDate, maxDate);
+        parser = new XMLparserJAXB();
+        String url = null;
+        //makeSureDateIsValid(request);
+
+        for(int i = 0; i <= howManyDays; i++) {
+            currentDate = setCurrentDate(currentDate, request.getLowHistDate());
+            url = defineURL(request.getCurrency(), currentDate);
+
+            try {
+                rateForCurrentDate = parser.parseXMLtoObject(url);
+                ratesForDateRange.add(rateForCurrentDate);
+            } catch (JAXBException | IOException ex) {
+                ex.printStackTrace();
+                return null;
+            }
+        }
+        return ratesForDateRange;
+    }
+
+    private String setCurrentDate(String currentDate, String lowHistDate) {
+        Calendar calendar = Calendar.getInstance();
+        Date currDate = null;
+        if(currentDate.compareTo(lowHistDate) != 0) {
+            try {
+                currDate = DateUtils.getInstance().parseStringToDate(currentDate, DATE_FORMAT);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            calendar.setTime(currDate);
+            calendar.add(Calendar.DATE, 1);
+            return DateUtils.getInstance().parseDateToString(calendar.getTime(), DATE_FORMAT);
+        } else {
+            return currentDate;
+        }
+    }
+
+    private long calculateHowManyDays(String lowDate, String highDate) {
+        Date minDate = null;
+        Date maxDate = null;
+        try {
+            minDate = DateUtils.getInstance().parseStringToDate(lowDate, DATE_FORMAT);
+            maxDate = DateUtils.getInstance().parseStringToDate(highDate, DATE_FORMAT);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return TimeUnit.DAYS.convert((maxDate.getTime() - minDate.getTime()), TimeUnit.MILLISECONDS);
     }
 
 }

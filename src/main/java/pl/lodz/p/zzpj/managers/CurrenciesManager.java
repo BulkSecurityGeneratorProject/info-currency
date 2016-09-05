@@ -8,4 +8,5 @@ public interface CurrenciesManager {
     String getLastCurrenciesXMLFromWebsite();
     ExchangeRatesSeries getDailyCurrencyRateFromWebsite(Currency currencySymbol);
     ExchangeRatesSeries getCurrencyRate(CurrencyVM request);
+    Object getRatesDependsOnParams(CurrencyVM request);
 }
