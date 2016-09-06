@@ -6,12 +6,12 @@ branch | status
 master | [![Build Status](https://travis-ci.org/PWeglewski/info-currency.svg?branch=master)](https://travis-ci.org/PWeglewski/info-currency)
 dev | [![Build Status](https://travis-ci.org/PWeglewski/info-currency.svg?branch=dev)](https://travis-ci.org/PWeglewski/info-currency)
 
-## Team:
+## Zespół:
 - Bugara Piotr
 - Cichecka Joanna
 - Pabich Izabela
 - Węglewski Piotr
 
-## How to run application:
+## Uruchomienie aplikacji:
 
 `mvn spring-boot:run`
