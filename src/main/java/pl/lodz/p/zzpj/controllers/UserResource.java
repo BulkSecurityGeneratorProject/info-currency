@@ -12,13 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import pl.lodz.p.zzpj.config.Constants;
-import pl.lodz.p.zzpj.controllers.util.HeaderUtil;
-import pl.lodz.p.zzpj.controllers.util.PaginationUtil;
+import pl.lodz.p.zzpj.utils.HeaderUtil;
+import pl.lodz.p.zzpj.utils.PaginationUtil;
 import pl.lodz.p.zzpj.domain.User;
 import pl.lodz.p.zzpj.repository.UserRepository;
 import pl.lodz.p.zzpj.security.AuthoritiesConstants;
-import pl.lodz.p.zzpj.service.MailService;
-import pl.lodz.p.zzpj.service.UserService;
+import pl.lodz.p.zzpj.managers.MailService;
+import pl.lodz.p.zzpj.managers.UserService;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;

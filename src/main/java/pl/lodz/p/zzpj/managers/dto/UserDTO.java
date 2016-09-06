@@ -1,4 +1,4 @@
-package pl.lodz.p.zzpj.service.dto;
+package pl.lodz.p.zzpj.managers.dto;
 
 import pl.lodz.p.zzpj.config.Constants;
 

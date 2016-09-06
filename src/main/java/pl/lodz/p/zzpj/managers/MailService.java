@@ -1,4 +1,4 @@
-package pl.lodz.p.zzpj.service;
+package pl.lodz.p.zzpj.managers;
 
 import pl.lodz.p.zzpj.config.ICurrencyProperties;
 import pl.lodz.p.zzpj.domain.User;

@@ -1,7 +1,7 @@
 package pl.lodz.p.zzpj.controllers;
 
 import pl.lodz.p.zzpj.domain.User;
-import pl.lodz.p.zzpj.service.dto.UserDTO;
+import pl.lodz.p.zzpj.managers.dto.UserDTO;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

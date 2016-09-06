@@ -1,4 +1,4 @@
-package pl.lodz.p.zzpj.service.util;
+package pl.lodz.p.zzpj.utils;
 
 import org.apache.commons.lang.RandomStringUtils;
 

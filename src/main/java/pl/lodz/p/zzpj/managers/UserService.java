@@ -1,4 +1,4 @@
-package pl.lodz.p.zzpj.service;
+package pl.lodz.p.zzpj.managers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +13,7 @@ import pl.lodz.p.zzpj.repository.AuthorityRepository;
 import pl.lodz.p.zzpj.repository.UserRepository;
 import pl.lodz.p.zzpj.security.AuthoritiesConstants;
 import pl.lodz.p.zzpj.security.SecurityUtils;
-import pl.lodz.p.zzpj.service.util.RandomUtil;
+import pl.lodz.p.zzpj.utils.RandomUtil;
 
 import javax.inject.Inject;
 import java.time.ZonedDateTime;
