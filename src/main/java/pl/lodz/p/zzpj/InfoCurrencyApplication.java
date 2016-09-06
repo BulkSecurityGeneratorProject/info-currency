@@ -5,9 +5,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 import pl.lodz.p.zzpj.config.Constants;
 import pl.lodz.p.zzpj.config.DefaultProfileUtil;
+import pl.lodz.p.zzpj.config.ICurrencyProperties;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -16,7 +20,9 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Collection;
 
-@SpringBootApplication
+@ComponentScan
+@EnableAutoConfiguration
+@EnableConfigurationProperties(ICurrencyProperties.class)
 @EnableAspectJAutoProxy
 public class InfoCurrencyApplication {
     private static final Logger log = LoggerFactory.getLogger(InfoCurrencyApplication.class);
