@@ -15,12 +15,14 @@ import pl.lodz.p.zzpj.config.TestContext;
 import pl.lodz.p.zzpj.controllers.HomePageController;
 import pl.lodz.p.zzpj.controllers.vm.CurrencyVM;
 import pl.lodz.p.zzpj.model.ExchangeRatesSeries;
+import pl.lodz.p.zzpj.repository.SearchRepository;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import static org.junit.Assert.*;
 
+import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -34,10 +36,12 @@ public class CurrenciesManagerNBPTest {
     private CurrencyVM request;
     private ArrayList<ExchangeRatesSeries> givenRates;
     private ExchangeRatesSeries givenRate;
+    private SearchRepository repository;
 
     @Before
     public void setUp() {
-        currManager = new CurrenciesManagerNBP();
+        repository = mock(SearchRepository.class);
+        currManager = new CurrenciesManagerNBP(repository);
         givenRates = new ArrayList<>();
         request = new CurrencyVM();
     }

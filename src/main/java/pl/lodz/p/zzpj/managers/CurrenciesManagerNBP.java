@@ -5,7 +5,10 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.apache.tomcat.jni.Time;
 import org.h2.mvstore.DataUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import pl.lodz.p.zzpj.domain.util.Search;
+import pl.lodz.p.zzpj.repository.SearchRepository;
 import pl.lodz.p.zzpj.utils.DateUtils;
 import pl.lodz.p.zzpj.controllers.vm.CurrencyVM;
 import pl.lodz.p.zzpj.model.Currency;
@@ -40,6 +43,13 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
     private ArrayList<String> notWorkingDates = new ArrayList<>();
 
     private XMLparser parser;
+
+    private SearchRepository repository;
+
+    @Autowired
+    public CurrenciesManagerNBP(SearchRepository repository) {
+        this.repository = repository;
+    }
 
     private void setUpNotWorkingDates() {
         notWorkingDates.add("2016-01-01");
@@ -120,11 +130,13 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
     @Override
     public Object getRatesDependsOnParams(CurrencyVM request) {
         logger.info("getRatesDependsOnParams invoked" );
+        repository.save(new Search(request, 1));
+        List<Search> searchList = repository.getUserSearchHistory(1);
         if(request.getLowHistDate() != null && request.getHighHistDate() != null) {
             return getRangeRates(request);
         } else {
-            return getCurrencyRate(request);
-        }
+            return getCurrencyRate(request);        }
+
     }
 
     private void makeSureDateIsValid(CurrencyVM request) {
