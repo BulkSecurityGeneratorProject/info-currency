@@ -4,7 +4,6 @@ import pl.lodz.p.zzpj.config.Constants;
 import com.codahale.metrics.annotation.Timed;
 import pl.lodz.p.zzpj.domain.User;
 import pl.lodz.p.zzpj.repository.UserRepository;
-import pl.lodz.p.zzpj.repository.search.UserSearchRepository;
 import pl.lodz.p.zzpj.security.AuthoritiesConstants;
 import pl.lodz.p.zzpj.service.MailService;
 import pl.lodz.p.zzpj.service.UserService;
@@ -29,8 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing users.
@@ -70,9 +67,6 @@ public class UserResource {
 
     @Inject
     private UserService userService;
-
-    @Inject
-    private UserSearchRepository userSearchRepository;
 
     /**
      * POST  /users  : Creates a new user.
@@ -205,22 +199,5 @@ public class UserResource {
         log.debug("REST request to delete User: {}", login);
         userService.deleteUser(login);
         return ResponseEntity.ok().headers(HeaderUtil.createAlert( "userManagement.deleted", login)).build();
-    }
-
-    /**
-     * SEARCH  /_search/users/:query : search for the User corresponding
-     * to the query.
-     *
-     * @param query the query to search
-     * @return the result of the search
-     */
-    @RequestMapping(value = "/_search/users/{query}",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public List<User> search(@PathVariable String query) {
-        return StreamSupport
-                .stream(userSearchRepository.search(queryStringQuery(query)).spliterator(), false)
-                .collect(Collectors.toList());
     }
 }
