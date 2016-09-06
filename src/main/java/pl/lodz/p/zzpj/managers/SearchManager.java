@@ -25,4 +25,6 @@ public class SearchManager {
     public List<Search> getUserSearchHistory(int userId) {
         return repository.getUserSearchHistory(userId);
     }
+
+    public void saveSearchHistoryItem(Search search) { repository.save(search); }
 }

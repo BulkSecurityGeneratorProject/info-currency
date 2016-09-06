@@ -46,9 +46,12 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
 
     private SearchRepository repository;
 
+    private SearchManager searchManager;
+
     @Autowired
     public CurrenciesManagerNBP(SearchRepository repository) {
         this.repository = repository;
+        searchManager = new SearchManager(repository);
     }
 
     private void setUpNotWorkingDates() {
@@ -118,8 +121,7 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
     @Override
     public Object getRatesDependsOnParams(CurrencyVM request) {
         logger.info("getRatesDependsOnParams invoked" );
-        repository.save(new Search(request, 1));
-        List<Search> searchList = repository.getUserSearchHistory(1);
+        searchManager.saveSearchHistoryItem(new Search(request, 1));
         if(request.getLowHistDate() != null && request.getHighHistDate() != null) {
             return getRangeRates(request);
         } else {

@@ -13,7 +13,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import pl.lodz.p.zzpj.config.TestContext;
-import pl.lodz.p.zzpj.managers.CurrenciesManagerNBP;
 import pl.lodz.p.zzpj.managers.SearchManager;
 import pl.lodz.p.zzpj.repository.SearchRepository;
 
