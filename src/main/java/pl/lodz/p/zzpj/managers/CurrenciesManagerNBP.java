@@ -8,11 +8,11 @@ import org.h2.mvstore.DataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.lodz.p.zzpj.domain.util.Search;
+import pl.lodz.p.zzpj.model.*;
+import pl.lodz.p.zzpj.model.Currency;
 import pl.lodz.p.zzpj.repository.SearchRepository;
 import pl.lodz.p.zzpj.utils.DateUtils;
 import pl.lodz.p.zzpj.controllers.vm.CurrencyVM;
-import pl.lodz.p.zzpj.model.Currency;
-import pl.lodz.p.zzpj.model.ExchangeRatesSeries;
 import pl.lodz.p.zzpj.xml.XMLparser;
 import pl.lodz.p.zzpj.xml.XMLparserJAXB;
 
@@ -23,10 +23,12 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 /**
  * CurrenciesManager implementation that downloads currencies from Narodowy Bank Polski site.
@@ -119,14 +121,33 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
     }
 
     @Override
-    public Object getRatesDependsOnParams(CurrencyVM request) {
+    public CurrencyResponse getRatesDependsOnParams(CurrencyVM request) {
         logger.info("getRatesDependsOnParams invoked" );
+        CurrencyResponse currencyResponse = new CurrencyResponse();
         searchManager.saveSearchHistoryItem(new Search(request, 1));
         if(request.getLowHistDate() != null && request.getHighHistDate() != null) {
-            return getRangeRates(request);
+            ArrayList<ExchangeRatesSeries> rangeRates = getRangeRates(request);
+            currencyResponse.setData(rangeRates);
+            currencyResponse.setAverageAsk(getAverageRate(rangeRates, "ask"));
+            currencyResponse.setAverageBid(getAverageRate(rangeRates, "bid"));
         } else {
-            return getCurrencyRate(request);        }
+            currencyResponse.setData(getCurrencyRate(request));
+        }
+        return currencyResponse;
+    }
 
+    private double getAverageRate(List<ExchangeRatesSeries> rangeRates, String type) {
+        Function<ExchangeRatesSeries, BigDecimal> function;
+        if(type.equals("ask")) {
+            function = p -> p.getRates().getRate().getAsk();
+        } else {
+            function = p -> p.getRates().getRate().getBid();
+        }
+        return rangeRates.parallelStream()
+                .map(function)
+                .mapToDouble(BigDecimal::doubleValue)
+                .average()
+                .getAsDouble();
     }
 
     private void makeSureDateIsValid(CurrencyVM request) {
