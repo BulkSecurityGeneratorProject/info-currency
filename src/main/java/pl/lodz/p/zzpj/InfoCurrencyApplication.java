@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 import pl.lodz.p.zzpj.config.Constants;
 import pl.lodz.p.zzpj.config.DefaultProfileUtil;
-import pl.lodz.p.zzpj.config.JHipsterProperties;
+import pl.lodz.p.zzpj.config.ICurrencyProperties;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -20,7 +20,7 @@ import java.util.Collection;
 
 @ComponentScan
 @EnableAutoConfiguration
-@EnableConfigurationProperties(JHipsterProperties.class)
+@EnableConfigurationProperties(ICurrencyProperties.class)
 public class InfoCurrencyApplication {
     private static final Logger log = LoggerFactory.getLogger(InfoCurrencyApplication.class);
 

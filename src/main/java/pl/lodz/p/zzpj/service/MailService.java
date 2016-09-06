@@ -1,6 +1,6 @@
 package pl.lodz.p.zzpj.service;
 
-import pl.lodz.p.zzpj.config.JHipsterProperties;
+import pl.lodz.p.zzpj.config.ICurrencyProperties;
 import pl.lodz.p.zzpj.domain.User;
 
 import org.apache.commons.lang.CharEncoding;
@@ -34,7 +34,7 @@ public class MailService {
     private static final String BASE_URL = "baseUrl";
 
     @Inject
-    private JHipsterProperties jHipsterProperties;
+    private ICurrencyProperties iCurrencyProperties;
 
     @Inject
     private JavaMailSenderImpl javaMailSender;
@@ -55,7 +55,7 @@ public class MailService {
         try {
             MimeMessageHelper message = new MimeMessageHelper(mimeMessage, isMultipart, CharEncoding.UTF_8);
             message.setTo(to);
-            message.setFrom(jHipsterProperties.getMail().getFrom());
+            message.setFrom(iCurrencyProperties.getMail().getFrom());
             message.setSubject(subject);
             message.setText(content, isHtml);
             javaMailSender.send(mimeMessage);

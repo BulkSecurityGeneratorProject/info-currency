@@ -1,6 +1,6 @@
 package pl.lodz.p.zzpj.security.jwt;
 
-import pl.lodz.p.zzpj.config.JHipsterProperties;
+import pl.lodz.p.zzpj.config.ICurrencyProperties;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,17 +32,17 @@ public class TokenProvider {
     private long tokenValidityInSecondsForRememberMe;
 
     @Inject
-    private JHipsterProperties jHipsterProperties;
+    private ICurrencyProperties iCurrencyProperties;
 
     @PostConstruct
     public void init() {
         this.secretKey =
-                jHipsterProperties.getSecurity().getAuthentication().getJwt().getSecret();
+                iCurrencyProperties.getSecurity().getAuthentication().getJwt().getSecret();
 
         this.tokenValidityInSeconds =
-                1000 * jHipsterProperties.getSecurity().getAuthentication().getJwt().getTokenValidityInSeconds();
+                1000 * iCurrencyProperties.getSecurity().getAuthentication().getJwt().getTokenValidityInSeconds();
         this.tokenValidityInSecondsForRememberMe =
-                1000 * jHipsterProperties.getSecurity().getAuthentication().getJwt().getTokenValidityInSecondsForRememberMe();
+                1000 * iCurrencyProperties.getSecurity().getAuthentication().getJwt().getTokenValidityInSecondsForRememberMe();
     }
 
     public String createToken(Authentication authentication, Boolean rememberMe) {

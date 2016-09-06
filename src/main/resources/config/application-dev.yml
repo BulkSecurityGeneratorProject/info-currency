@@ -16,19 +16,16 @@ spring:
     properties:
       hibernate.cache.use_second_level_cache: false
       hibernate.cache.use_query_cache: false
-      hibernate.generate_statistics: true
+      hibernate.generate_statistics: false
     hibernate:
       ddl-auto: create
-  data:
-    elasticsearch:
-      cluster-name:
-      cluster-nodes:
-      properties:
-        path:
-          logs: target/elasticsearch/log
-          data: target/elasticsearch/data
   mail:
     host: localhost
     port: 25
     username:
     password:
+icurrency:
+  security:
+    authentication:
+      jwt:
+        secret: my-secret-token-to-change-in-production
