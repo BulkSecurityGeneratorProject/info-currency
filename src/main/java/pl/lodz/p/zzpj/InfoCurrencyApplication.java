@@ -3,6 +3,8 @@ package pl.lodz.p.zzpj;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
@@ -21,6 +23,7 @@ import java.util.Collection;
 @ComponentScan
 @EnableAutoConfiguration
 @EnableConfigurationProperties(ICurrencyProperties.class)
+@EnableAspectJAutoProxy
 public class InfoCurrencyApplication {
     private static final Logger log = LoggerFactory.getLogger(InfoCurrencyApplication.class);
 

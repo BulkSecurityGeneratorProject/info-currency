@@ -14,7 +14,10 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import pl.lodz.p.zzpj.config.TestContext;
 import pl.lodz.p.zzpj.managers.CurrenciesManagerNBP;
+import pl.lodz.p.zzpj.model.ExchangeRatesSeries;
+import pl.lodz.p.zzpj.repository.SearchRepository;
 
+import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -30,12 +33,15 @@ public class CurrenciesControllerTest {
 
     private CurrenciesController currenciesController;
 
+    private SearchRepository repository;
+
     @Before
     public void setUp() {
         initializeMocksController();
         mockMvc = MockMvcBuilders.standaloneSetup(currenciesController)
                 .setViewResolvers(configureViewResolver())
                 .build();
+        repository = mock(SearchRepository.class);
     }
 
     private InternalResourceViewResolver configureViewResolver() {
@@ -48,7 +54,7 @@ public class CurrenciesControllerTest {
     private void initializeMocksController() {
         MockitoAnnotations.initMocks(this);
         currenciesController = new CurrenciesController();
-        currenciesController.setCurrenciesManager(new CurrenciesManagerNBP());
+        currenciesController.setCurrenciesManager(new CurrenciesManagerNBP(repository));
     }
 
     @Test
@@ -57,6 +63,12 @@ public class CurrenciesControllerTest {
                 .andExpect(status().isOk());
                 /*.andExpect(view().name("currencies"))
                 .andExpect(forwardedUrl("resources/templates/lastCurrencies.html"));*/
+    }
+
+    @Test
+    public void showConverterPage_shouldShowConverterPage() throws Exception {
+        mockMvc.perform(get("/converter"))
+                .andExpect(status().isOk());
     }
 
 }

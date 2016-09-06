@@ -6,11 +6,138 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
 </head>
 
 <body>
 
+<script>
+    function getRates() {
+        var currency = $("#currencyType").attr("value");
+        var upToDateRates;
+        var historicalDate;
+        var lowHistDate;
+        var highHistDate;
+        var selectedRadio = $('input[name=optradio]').filter(':checked');
+        if(selectedRadio[0].id == "upToDateRates") {
+            upToDateRates = true;
+            historicalDate = null;
+            lowHistDate = null;
+            highHistDate = null;
+        } else if(selectedRadio[0].id == "periodRates") {
+            upToDateRates = false;
+            highHistDate = null;
+            lowHistDate = $("#lowDateText").val();
+            highHistDate = $("#highDateText").val();
+        } else {
+            upToDateRates = false;
+            historicalDate = $("#dateText").val();
+            lowHistDate = null;
+            highHistDate = null;
+        }
 
+        var JSONObject= {"currency":currency, "upToDateRates":upToDateRates, "historicalDate": historicalDate , "lowHistDate": lowHistDate ,
+                            "highHistDate": highHistDate};
+
+        var request = $.ajax({
+            url: "/currencies/find",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(JSONObject),
+            dataType: "json",
+            success:function (response,textStatus,jqXHR) {
+                if(response.data.length > 0) {
+                    //var jsonData = $.parseJSON(response);
+                    var dates = [];
+                    var bids = [];
+                    var asks = [];
+                    for(i = 0; i < response.data.length; i++) {
+                        dates[i] = response.data[i].rates.rate.effectiveDate;
+                        bids[i] = response.data[i].rates.rate.bid;
+                        asks[i] = response.data[i].rates.rate.ask;
+                    }
+                    $('#ratesChart').highcharts({
+                        chart: {
+                            type: 'line'
+                        },
+                        title: {
+                            text: 'Historia kursu waluty ' + JSONObject.currency
+                        },
+                        subtitle: {
+                            text: JSONObject.lowHistDate + ' - ' + JSONObject.highHistDate
+                        },
+                        xAxis: {
+                            categories: dates
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Wartość'
+                            }
+                        },
+                        plotOptions: {
+                            line: {
+                                dataLabels: {
+                                    enabled: true
+                                },
+                                enableMouseTracking: false
+                            }
+                        },
+                        series: [{
+                            name: 'Kupno',
+                            data: bids
+                        }, {
+                            name: 'Sprzedaż',
+                            data: asks
+                        }]
+                    });
+                    document.getElementById("ratesChart").style.display = "table";
+                } else if(response.data) {
+                    $('#bid').html(response.data.rates.rate.bid);
+                    $('#ask').html(response.data.rates.rate.ask);
+                    $('#code').html(response.data.code);
+                    $('#currency').html(response.data.currency);
+                    $('#rateDate').html(response.data.rates.rate.effectiveDate);
+                    document.getElementById("rateTable").style.display = "block";
+                    document.getElementById("ratesChart").style.display = "none";
+                } else {
+                    document.getElementById("rateTable").style.display = "none";
+                    alert("Błędne parametry wyszukiwania!!!!")
+                }
+            },
+            error: function (errorResponse1) {
+                document.getElementById("rateTable").style.display = "none";
+                console.log(errorResponse1);
+                alert("Nieoczekiwany błąd");
+            }
+        });
+    }
+
+    function getHistory() {
+        var request = $.ajax({
+            url: "/history/get",
+            type: "GET",
+            dataType: "json",
+            success: function(response) {
+                if(response.data) {
+                    var tr;
+                    for (var i = 0; i < response.data.length; i++) {
+                        tr = $('<tr/>');
+                        tr.append("<td>" + response.data[i].currency + "</td>");
+                        tr.append("<td>" + response.data[i].upToDateRates + "</td>");
+                        tr.append("<td>" + response.data[i].historicalDate + "</td>");
+                        tr.append("<td>" + response.data[i].lowHistDate + "</td>");
+                        tr.append("<td>" + response.data[i].highHistDate + "</td>");
+                        $('#historyTable').append(tr);
+                    }
+                }
+            },
+            error: function(response) {
+                document.getElementById("historyDiv").style.display = "none";
+            }
+        });
+    }
+</script>
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -19,7 +146,7 @@
         <ul class="nav navbar-nav">
             <li><a href="/">Strona główna</a></li>
             <li class="active"><a href="currencies">Waluty</a></li>
-            <li><a href="#">Giełda</a></li>
+            <li><a href="converter">Przelicznik walut</a></li>
             <li><a href="#">Papiery wartościowe</a></li>
         </ul>
     </div>
@@ -29,6 +156,140 @@
     <div class="jumbotron">
         <h1>Oto kursy walut z dnia dzisiejszego:</h1>
     </div>
+
+    <div id="historyButton">
+        <button type="button" class="btn btn-success" onclick="getHistory()">Pobierz historię wyszukiwań</button>
+    </div>
+
+    <div class="container" id="historyDiv">
+        <table id="historyTable" border="1">
+            <thead>
+                <tr>
+                    <td>Waluta</td>
+                    <td>Aktualny kurs</td>
+                    <td>Historyczny kurs</td>
+                    <td>Początkowa data</td>
+                    <td>Końcowa data</td>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="dropdown">
+        <button id="currencyType" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Wybierz walutę:
+            <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+            <li><a href="#">EUR</a></li>
+            <li><a href="#">USD</a></li>
+            <li><a href="#">CHF</a></li>
+            <li><a href="#">JPY</a></li>
+            <li><a href="#">AUD</a></li>
+            <li><a href="#">CAD</a></li>
+            <li><a href="#">DKK</a></li>
+            <li><a href="#">NOK</a></li>
+            <li><a href="#">SEK</a></li>
+        </ul>
+
+        <script>
+            $(".dropdown-menu li a").click(function(){
+
+                $("#currencyType").text("Wybrana waluta: " + $(this).text());
+                $("#currencyType").val($(this).text());
+
+            });
+        </script>
+    </div>
+
+    <div id="dateButtons" class="btn-group" data-toggle="buttons">
+        <label>
+            <input id="upToDateRates" type="radio" name="optradio">Aktualny kurs
+        </label>
+        <label>
+            <input id="historicalRates" type="radio" name="optradio">Historyczny kurs
+        </label>
+        <label>
+            <input id="periodRates" type="radio" name="optradio">Kurs z wybranego przedziału czasu
+        </label>
+
+        <div id="calendar">
+            <div class="form-group">
+                <label for="date">Podaj datę w formacie: rrrr-mm-dd</label>
+                <input id="dateText" type="text" class="form-control" id="date">
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            document.getElementById("calendar").style.display = "none";
+            $("input[name=optradio]").click(function () {
+                if(this.id == "historicalRates") {
+                    document.getElementById("calendar").style.display = "inline-block";
+                } else {
+                    document.getElementById("calendar").style.display = "none";
+                }
+            });
+        </script>
+
+        <div id="interval">
+            <div class="form-group">
+                <label for="date">Podaj daty w formacie: rrrr-mm-dd</label>
+                <input id="lowDateText" type="text" class="form-control" id="lowDate">
+                <input id="highDateText" type="text" class="form-control" id="highDate">
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            document.getElementById("interval").style.display = "none";
+            $("input[name=optradio]").click(function () {
+                if(this.id == "periodRates") {
+                    document.getElementById("interval").style.display = "inline-block";
+                } else {
+                    document.getElementById("interval").style.display = "none";
+                }
+            });
+        </script>
+    </div>
+
+    <div id="submitButton">
+        <button type="button" class="btn btn-success" onclick="getRates()">Pobierz kurs</button>
+    </div>
+</div>
+
+<div id="rateTable" align="center" class="container">
+    <table class="table table-striped table-hover table-sm">
+        <tr>
+            <th> SYMBOL </th>
+            <td id="code"></td>
+        </tr>
+        <tr>
+            <th> NAZWA</th>
+            <td id="currency"></td>
+        </tr>
+        <tr class="success">
+            <th> KURS Z DNIA </th>
+            <td id="rateDate"></td>
+        </tr>
+        <tr class="active">
+            <th> KUPNO</th>
+            <td id="bid"></td>
+        </tr>
+        <tr class="danger">
+            <th> SPRZEDAŻ</th>
+            <td id="ask"></td>
+        </tr>
+    </table>
+
+    <script>
+        document.getElementById("rateTable").style.display = "none";
+    </script>
+</div>
+
+<div id="ratesChart" style="min-width: 600px; height: 400px; margin: 0 auto">
+    <script>
+        document.getElementById("ratesChart").style.display = "none";
+    </script>
 </div>
 
 </body>

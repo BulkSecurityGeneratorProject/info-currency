@@ -1,6 +1,7 @@
 package pl.lodz.p.zzpj.xml;
 
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
 import org.xml.sax.InputSource;
 import pl.lodz.p.zzpj.model.Currency;
 import pl.lodz.p.zzpj.model.ExchangeRatesSeries;
@@ -16,6 +17,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+@Component("XMLparser")
 public class XMLparserJAXB implements XMLparser {
     Logger logger = Logger.getLogger(XMLparserJAXB.class);
 
@@ -28,15 +30,17 @@ public class XMLparserJAXB implements XMLparser {
     private static final String CURRENCY_DAILY_SUFFIX = "/today?format=xml";
 
     @Override
-    public ExchangeRatesSeries parseXMLtoObject(Currency symbol) throws JAXBException, IOException {
+    public ExchangeRatesSeries parseXMLtoObject(String url) throws JAXBException, IOException {
+        logger.info("parseXMLtoObject invoked");
         jaxbContext = JAXBContext.newInstance(ExchangeRatesSeries.class);
         unmarshaller = jaxbContext.createUnmarshaller();
-        ExchangeRatesSeries unmarshal = (ExchangeRatesSeries) unmarshaller.unmarshal(new URL(buildURI(symbol.getName())));
+        ExchangeRatesSeries unmarshal = (ExchangeRatesSeries) unmarshaller.unmarshal(new URL(url));
         return unmarshal;
     }
 
     @Override
     public String parseObjectToXML(ExchangeRatesSeries exchangeRatesSeries) throws JAXBException {
+        logger.info("parseObjectToXML invoked");
         jaxbContext = JAXBContext.newInstance(ExchangeRatesSeries.class);
         stringWriter = new StringWriter();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);

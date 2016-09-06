@@ -31,8 +31,8 @@ public class Rate {
         this.no = value;
     }
 
-    public XMLGregorianCalendar getEffectiveDate() {
-        return effectiveDate;
+    public String getEffectiveDate() {
+        return effectiveDate.toString();
     }
 
     public void setEffectiveDate(XMLGregorianCalendar value) {
@@ -53,6 +53,10 @@ public class Rate {
 
     public void setAsk(BigDecimal ask) {
         this.ask = ask;
+    }
+
+    public BigDecimal getMid() {
+        return bid.add(ask).divide(new BigDecimal(2));
     }
 
     @Override

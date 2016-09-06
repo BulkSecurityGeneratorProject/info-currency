@@ -3,7 +3,6 @@ package pl.lodz.p.zzpj.config;
 /**
  * Application constants.
  * <p>
- * Created by piotr on 18.08.16.
  */
 public final class Constants {
     // Spring profiles for development and production
