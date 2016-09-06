@@ -1,13 +1,12 @@
-package pl.lodz.p.zzpj.web.rest.vm;
-
-import java.time.ZonedDateTime;
-
-import java.util.Set;
+package pl.lodz.p.zzpj.controllers;
 
 import pl.lodz.p.zzpj.domain.User;
 import pl.lodz.p.zzpj.service.dto.UserDTO;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.ZonedDateTime;
+import java.util.Set;
 
 /**
  * View Model extending the UserDTO, which is meant to be used in the user management UI.
@@ -42,7 +41,7 @@ public class ManagedUserVM extends UserDTO {
     }
 
     public ManagedUserVM(Long id, String login, String password, String firstName, String lastName,
-                         String email, boolean activated, String langKey, Set<String> authorities , ZonedDateTime createdDate, String lastModifiedBy, ZonedDateTime lastModifiedDate ) {
+                         String email, boolean activated, String langKey, Set<String> authorities, ZonedDateTime createdDate, String lastModifiedBy, ZonedDateTime lastModifiedDate) {
         super(login, firstName, lastName, email, activated, langKey, authorities);
         this.id = id;
         this.createdDate = createdDate;

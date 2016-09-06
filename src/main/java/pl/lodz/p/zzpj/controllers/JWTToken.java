@@ -1,4 +1,4 @@
-package pl.lodz.p.zzpj.web.rest;
+package pl.lodz.p.zzpj.controllers;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -1,4 +1,4 @@
-package pl.lodz.p.zzpj.web.rest.util;
+package pl.lodz.p.zzpj.controllers.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

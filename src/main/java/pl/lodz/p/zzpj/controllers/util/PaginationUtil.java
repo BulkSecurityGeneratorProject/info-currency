@@ -1,4 +1,4 @@
-package pl.lodz.p.zzpj.web.rest.util;
+package pl.lodz.p.zzpj.controllers.util;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;

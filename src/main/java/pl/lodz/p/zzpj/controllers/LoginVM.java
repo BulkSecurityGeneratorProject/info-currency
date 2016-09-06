@@ -1,7 +1,6 @@
-package pl.lodz.p.zzpj.web.rest.vm;
+package pl.lodz.p.zzpj.controllers;
 
 import pl.lodz.p.zzpj.config.Constants;
-import pl.lodz.p.zzpj.web.rest.vm.ManagedUserVM;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;

@@ -1,10 +1,4 @@
-package pl.lodz.p.zzpj.web.rest;
-
-import pl.lodz.p.zzpj.security.jwt.JWTConfigurer;
-import pl.lodz.p.zzpj.security.jwt.TokenProvider;
-import pl.lodz.p.zzpj.web.rest.vm.LoginVM;
-
-import java.util.Collections;
+package pl.lodz.p.zzpj.controllers;
 
 import com.codahale.metrics.annotation.Timed;
 import org.springframework.http.HttpStatus;
@@ -14,11 +8,17 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import pl.lodz.p.zzpj.security.jwt.JWTConfigurer;
+import pl.lodz.p.zzpj.security.jwt.TokenProvider;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.Collections;
 
 @RestController
 @RequestMapping("/api")
@@ -45,7 +45,7 @@ public class UserJWTController {
             response.addHeader(JWTConfigurer.AUTHORIZATION_HEADER, "Bearer " + jwt);
             return ResponseEntity.ok(new JWTToken(jwt));
         } catch (AuthenticationException exception) {
-            return new ResponseEntity<>(Collections.singletonMap("AuthenticationException",exception.getLocalizedMessage()), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(Collections.singletonMap("AuthenticationException", exception.getLocalizedMessage()), HttpStatus.UNAUTHORIZED);
         }
     }
 }
