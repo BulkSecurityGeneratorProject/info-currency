@@ -1,7 +1,7 @@
 package pl.lodz.p.zzpj.exceptions;
 
 public class CurrencyDownloaderException extends ApplicationException {
-    private static final String NO_TODAYS_RATES = "CURRENCY.EXCEPTION.NO_TODAYS_RATES";
+    private static final String NO_RATES_FOR_DATE = "CURRENCY.EXCEPTION.NO_RATES_FOR_DATE";
 
     public CurrencyDownloaderException() {
     }
@@ -14,7 +14,7 @@ public class CurrencyDownloaderException extends ApplicationException {
         super(message, cause);
     }
 
-    public static CurrencyDownloaderException noTodaysRates() {
-        return new CurrencyDownloaderException(NO_TODAYS_RATES);
+    public static CurrencyDownloaderException noRatesForDate() {
+        return new CurrencyDownloaderException(NO_RATES_FOR_DATE);
     }
 }

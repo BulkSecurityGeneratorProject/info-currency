@@ -3,7 +3,8 @@ package pl.lodz.p.zzpj.managers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -31,24 +32,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 public class CurrenciesManagerNBPTest {
 
-    private MockMvc mockMvc;
+
+    @InjectMocks
     private CurrenciesManagerNBP currManager;
+
     private CurrencyVM request;
     private ArrayList<ExchangeRatesSeries> givenRates;
     private ExchangeRatesSeries givenRate;
     private SearchRepository repository;
 
+    private BigDecimal bidFromDayBefore;
+    private BigDecimal askFromDayBefore;
+
     @Before
     public void setUp() {
-        repository = mock(SearchRepository.class);
-        currManager = new CurrenciesManagerNBP(repository);
-        givenRates = new ArrayList<>();
-        request = new CurrencyVM();
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
     public void shouldReturnListWith12Rates() {
         //given
+        request = new CurrencyVM();
         request.setCurrency("EUR");
         request.setLowHistDate("2016-07-03");
         request.setHighHistDate("2016-07-14");
@@ -61,9 +65,7 @@ public class CurrenciesManagerNBPTest {
     @Test
     public void shouldHaveRateFromFridayAtSaturday() {
         //given
-        request.setCurrency("EUR");
-        request.setLowHistDate("2016-09-02");
-        request.setHighHistDate("2016-09-03");
+        buildValidCurrencyRequest();
         //when
         givenRates = currManager.getRangeRates(request);
         //then
@@ -75,19 +77,33 @@ public class CurrenciesManagerNBPTest {
     @Test
     public void shouldTakeRateFromAnotherDayBecauseOfNotWorkingDay() {
         //given
-        request.setCurrency("USD");
-        request.setHistoricalDate("2016-05-03");
-        Double bid = 3.7996;
-        Double ask = 3.8764;
-        BigDecimal bidFromDayBefore = new BigDecimal(bid);
-        bidFromDayBefore = bidFromDayBefore.setScale(4, BigDecimal.ROUND_UP);
-        BigDecimal askFromDayBefore = new BigDecimal(ask);
-        askFromDayBefore = askFromDayBefore.setScale(4, BigDecimal.ROUND_UP);
+        buildValidBiggerCurrencyRequest();
+        setUpSomeBigDecimals();
         //when
         givenRate = currManager.getCurrencyRate(request);
         //then
         assertEquals(bidFromDayBefore, givenRate.getRates().getRate().getBid());
         assertEquals(askFromDayBefore, givenRate.getRates().getRate().getAsk());
+    }
+
+    private void buildValidCurrencyRequest() {
+        request = new CurrencyVM();
+        request.setCurrency("EUR");
+        request.setLowHistDate("2016-09-02");
+        request.setHighHistDate("2016-09-03");
+    }
+
+    private void buildValidBiggerCurrencyRequest() {
+        request = new CurrencyVM();
+        request.setCurrency("USD");
+        request.setHistoricalDate("2016-05-03");
+    }
+
+    private void setUpSomeBigDecimals() {
+        Double bid = 3.7996;
+        Double ask = 3.8764;
+        bidFromDayBefore = new BigDecimal(bid).setScale(4, BigDecimal.ROUND_UP);
+        askFromDayBefore = new BigDecimal(ask).setScale(4, BigDecimal.ROUND_UP);
     }
 
 }

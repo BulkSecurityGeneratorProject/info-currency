@@ -91,18 +91,6 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
     }
 
     @Override
-    public ExchangeRatesSeries getDailyCurrencyRateFromWebsite(Currency currencySymbol) {
-        logger.info("getDailyCurrencyRateFromWebsite invoked");
-//        parser = new XMLparserJAXB();
-//        try {
-//            return parser.parseXMLtoObject(currencySymbol);
-//        } catch (JAXBException | IOException e) {
-//            e.printStackTrace();
-//        }
-        return null;
-    }
-
-    @Override
     public ExchangeRatesSeries getCurrencyRate(CurrencyVM request) {
         logger.info("getCurrencyRate invoked" );
         parser = new XMLparserJAXB();
