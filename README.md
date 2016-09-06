@@ -8,7 +8,5 @@ Project created for Zaawansowane zagadnienia programowania w języku Java classe
 - Węglewski Piotr
 
 ## How to run application:
-```sh
-mvn spring-boot:run
-```
+
 `mvn spring-boot:run`
