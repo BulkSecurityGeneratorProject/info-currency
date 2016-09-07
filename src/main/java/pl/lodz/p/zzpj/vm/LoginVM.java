@@ -1,6 +1,7 @@
-package pl.lodz.p.zzpj.controllers;
+package pl.lodz.p.zzpj.vm;
 
 import pl.lodz.p.zzpj.config.Constants;
+import pl.lodz.p.zzpj.controllers.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;

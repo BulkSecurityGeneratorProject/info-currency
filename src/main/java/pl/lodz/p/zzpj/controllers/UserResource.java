@@ -19,6 +19,7 @@ import pl.lodz.p.zzpj.repository.UserRepository;
 import pl.lodz.p.zzpj.security.AuthoritiesConstants;
 import pl.lodz.p.zzpj.managers.MailService;
 import pl.lodz.p.zzpj.managers.UserService;
+import pl.lodz.p.zzpj.vm.ManagedUserVM;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;

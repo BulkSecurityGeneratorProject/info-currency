@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.lodz.p.zzpj.controllers.vm.ManagedUserVM;
+import pl.lodz.p.zzpj.vm.ManagedUserVM;
 import pl.lodz.p.zzpj.domain.User;
 import pl.lodz.p.zzpj.managers.MailService;
 import pl.lodz.p.zzpj.managers.UserService;

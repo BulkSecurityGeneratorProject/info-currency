@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import pl.lodz.p.zzpj.security.jwt.JWTConfigurer;
 import pl.lodz.p.zzpj.security.jwt.TokenProvider;
+import pl.lodz.p.zzpj.vm.LoginVM;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;

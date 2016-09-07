@@ -6,7 +6,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.lodz.p.zzpj.controllers.ManagedUserVM;
 import pl.lodz.p.zzpj.domain.Authority;
 import pl.lodz.p.zzpj.domain.User;
 import pl.lodz.p.zzpj.repository.AuthorityRepository;
@@ -14,6 +13,7 @@ import pl.lodz.p.zzpj.repository.UserRepository;
 import pl.lodz.p.zzpj.security.AuthoritiesConstants;
 import pl.lodz.p.zzpj.security.SecurityUtils;
 import pl.lodz.p.zzpj.utils.RandomUtil;
+import pl.lodz.p.zzpj.vm.ManagedUserVM;
 
 import javax.inject.Inject;
 import java.time.ZonedDateTime;

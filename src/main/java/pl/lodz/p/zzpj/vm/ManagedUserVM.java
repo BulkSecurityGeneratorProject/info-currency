@@ -1,4 +1,4 @@
-package pl.lodz.p.zzpj.controllers;
+package pl.lodz.p.zzpj.vm;
 
 import pl.lodz.p.zzpj.domain.User;
 import pl.lodz.p.zzpj.managers.dto.UserDTO;
