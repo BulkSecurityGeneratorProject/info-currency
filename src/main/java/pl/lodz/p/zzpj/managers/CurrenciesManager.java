@@ -9,6 +9,6 @@ import java.util.ArrayList;
 public interface CurrenciesManager {
     String getLastCurrenciesXMLFromWebsite();
     ExchangeRatesSeries getCurrencyRate(CurrencyVM request);
-    CurrencyResponse getRatesDependsOnParams(CurrencyVM request);
+    CurrencyResponse getRatesDependsOnParams(CurrencyVM request, Long userId);
     ArrayList<ExchangeRatesSeries> getRangeRates(CurrencyVM requste);
 }

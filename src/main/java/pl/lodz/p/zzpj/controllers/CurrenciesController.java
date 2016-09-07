@@ -7,6 +7,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import pl.lodz.p.zzpj.domain.User;
+import pl.lodz.p.zzpj.repository.UserRepository;
 import pl.lodz.p.zzpj.vm.ConverterVM;
 import pl.lodz.p.zzpj.vm.CurrencyVM;
 import pl.lodz.p.zzpj.managers.Converter;
@@ -14,9 +16,11 @@ import pl.lodz.p.zzpj.managers.CurrenciesManager;
 import pl.lodz.p.zzpj.model.ConverterResponse;
 import pl.lodz.p.zzpj.model.CurrencyResponse;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 public class CurrenciesController {
@@ -32,6 +36,9 @@ public class CurrenciesController {
 
     @Autowired
     private Converter converter;
+
+    @Inject
+    private UserRepository userRepository;
 
     @RequestMapping(value = "currencies", method = RequestMethod.GET)
     public String getLastCurrencies(Map<String, Object> model) {
@@ -54,8 +61,9 @@ public class CurrenciesController {
         logger.info("getCurrenciesRate invoked");
         //CurrencyResponse response = new CurrencyResponse();
         logger.info(currencyVM.toString());
+        User user = (userRepository.findOneByLogin(request.getUserPrincipal().getName())).get();
         //response.setData(currenciesManager.getRatesDependsOnParams(currencyVM));
-        CurrencyResponse response = currenciesManager.getRatesDependsOnParams(currencyVM);
+        CurrencyResponse response = currenciesManager.getRatesDependsOnParams(currencyVM, user.getId());
         //response.setData(currenciesManager.getCurrencyRate(currencyVM));
         return new ResponseEntity<CurrencyResponse>(response, HttpStatus.OK);
  //       return LAST_CURRENCIES_VIEW;

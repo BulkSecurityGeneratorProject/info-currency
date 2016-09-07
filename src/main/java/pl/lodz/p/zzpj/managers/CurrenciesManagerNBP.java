@@ -116,10 +116,10 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
     }
 
     @Override
-    public CurrencyResponse getRatesDependsOnParams(CurrencyVM request) {
+    public CurrencyResponse getRatesDependsOnParams(CurrencyVM request, Long userId) {
         logger.info("getRatesDependsOnParams invoked" );
         CurrencyResponse currencyResponse = new CurrencyResponse();
-        searchManager.saveSearchHistoryItem(new Search(request, 1));
+        searchManager.saveSearchHistoryItem(new Search(request, userId));
         if(request.getLowHistDate() != null && request.getHighHistDate() != null) {
             ArrayList<ExchangeRatesSeries> rangeRates = getRangeRates(request);
             currencyResponse.setData(rangeRates);
@@ -180,22 +180,28 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
         logger.info("validateDate invoked");
         Calendar calendar = Calendar.getInstance();
         Date currDate = null;
+        boolean isValid = false;
         try {
             currDate = DateUtils.getInstance().parseStringToDate(currentDate, DATE_FORMAT);
             calendar.setTime(currDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        logger.info(notWorkingDates.contains(currentDate));
-        if(notWorkingDates.contains(currentDate)) {
-            logger.info(currentDate);
-            calendar.add(Calendar.DATE, -1);
-            currDate = calendar.getTime();
-            logger.info(DateUtils.getInstance().parseDateToString(currDate, DATE_FORMAT));
-        }
-        while (currDate.getDay() == 6 || currDate.getDay() == 0) {
-            calendar.add(Calendar.DATE, -1);
-            currDate = calendar.getTime();
+        while(!isValid) {
+            if(notWorkingDates.contains(currentDate)) {
+                calendar.add(Calendar.DATE, -1);
+                currDate = calendar.getTime();
+            }
+            while(currDate.getDay() == 6 || currDate.getDay() == 0) {
+                calendar.add(Calendar.DATE, -1);
+                currDate = calendar.getTime();
+                currentDate = DateUtils.getInstance().parseDateToString(currDate, DATE_FORMAT);
+            }
+            if(!notWorkingDates.contains(DateUtils.getInstance().parseDateToString(currDate, DATE_FORMAT))) {
+                isValid = true;
+            } else {
+                isValid = false;
+            }
         }
 
         return DateUtils.getInstance().parseDateToString(currDate, DATE_FORMAT);

@@ -22,7 +22,7 @@ public class SearchManager {
         this.repository = repository;
     }
 
-    public List<Search> getUserSearchHistory(int userId) {
+    public List<Search> getUserSearchHistory(Long userId) {
         return repository.getUserSearchHistory(userId);
     }
 
