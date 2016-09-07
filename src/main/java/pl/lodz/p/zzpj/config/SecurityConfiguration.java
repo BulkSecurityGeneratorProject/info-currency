@@ -1,22 +1,20 @@
 package pl.lodz.p.zzpj.config;
 
-import pl.lodz.p.zzpj.security.*;
-import pl.lodz.p.zzpj.security.jwt.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.data.repository.query.SecurityEvaluationContextExtension;
+import pl.lodz.p.zzpj.security.Http401UnauthorizedEntryPoint;
+import pl.lodz.p.zzpj.security.jwt.JWTConfigurer;
+import pl.lodz.p.zzpj.security.jwt.TokenProvider;
 
 import javax.inject.Inject;
 
@@ -47,19 +45,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring()
-                .antMatchers(HttpMethod.OPTIONS, "/**")
-                .antMatchers("/app/**/*.{js,html}")
-                .antMatchers("/bower_components/**")
-                .antMatchers("/i18n/**")
-                .antMatchers("/content/**")
-                .antMatchers("/swagger-ui/index.html")
-                .antMatchers("/test/**")
-                .antMatchers("/h2-console/**");
-    }
-
-    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .exceptionHandling()
@@ -82,12 +67,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/account/reset_password/finish").permitAll()
                 .antMatchers("/api/profile-info").permitAll()
                 .antMatchers("/api/**").authenticated()
-                .antMatchers("/websocket/tracker").hasAuthority(AuthoritiesConstants.ADMIN)
-                .antMatchers("/websocket/**").permitAll()
-                .antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
-                .antMatchers("/v2/api-docs/**").permitAll()
-                .antMatchers("/swagger-resources/configuration/ui").permitAll()
-                .antMatchers("/swagger-ui/index.html").hasAuthority(AuthoritiesConstants.ADMIN)
                 .and()
                 .apply(securityConfigurerAdapter());
 
