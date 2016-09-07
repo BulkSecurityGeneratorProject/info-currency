@@ -1,6 +1,6 @@
 package pl.lodz.p.zzpj.domain.util;
 
-import pl.lodz.p.zzpj.controllers.vm.CurrencyVM;
+import pl.lodz.p.zzpj.vm.CurrencyVM;
 
 import javax.persistence.*;
 import java.io.Serializable;

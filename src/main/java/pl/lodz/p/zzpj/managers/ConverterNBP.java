@@ -3,8 +3,8 @@ package pl.lodz.p.zzpj.managers;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl.lodz.p.zzpj.controllers.vm.ConverterVM;
-import pl.lodz.p.zzpj.controllers.vm.CurrencyVM;
+import pl.lodz.p.zzpj.vm.ConverterVM;
+import pl.lodz.p.zzpj.vm.CurrencyVM;
 import pl.lodz.p.zzpj.model.ExchangeRatesSeries;
 
 import java.math.BigDecimal;

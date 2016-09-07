@@ -1,7 +1,6 @@
 package pl.lodz.p.zzpj.managers;
 
-import pl.lodz.p.zzpj.controllers.vm.CurrencyVM;
-import pl.lodz.p.zzpj.model.Currency;
+import pl.lodz.p.zzpj.vm.CurrencyVM;
 import pl.lodz.p.zzpj.model.CurrencyResponse;
 import pl.lodz.p.zzpj.model.ExchangeRatesSeries;
 

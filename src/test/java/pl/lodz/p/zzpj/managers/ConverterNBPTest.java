@@ -9,7 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import pl.lodz.p.zzpj.config.TestContext;
-import pl.lodz.p.zzpj.controllers.vm.ConverterVM;
+import pl.lodz.p.zzpj.vm.ConverterVM;
 import pl.lodz.p.zzpj.model.ExchangeRatesSeries;
 
 import java.math.BigDecimal;
