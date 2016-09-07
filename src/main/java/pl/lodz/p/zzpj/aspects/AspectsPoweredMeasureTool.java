@@ -6,11 +6,14 @@ import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
+/**
+ * Measures time around currency converting method. Uses aspect oriented programming.
+ */
 @Aspect
 @Component
 public class AspectsPoweredMeasureTool {
-    Logger logger = Logger.getLogger(AspectsPoweredMeasureTool.class);
-    StopWatch stopWatch;
+    private Logger logger = Logger.getLogger(AspectsPoweredMeasureTool.class);
+    private StopWatch stopWatch;
 
     @Pointcut("execution(* pl.lodz.p.zzpj.managers.ConverterNBP.convert(..))")
     public void convert() { }

@@ -6,6 +6,9 @@ import pl.lodz.p.zzpj.model.ExchangeRatesSeries;
 
 import java.util.ArrayList;
 
+/**
+ * Manager that provides currency operations such as downloading.
+ */
 public interface CurrenciesManager {
     String getLastCurrenciesXMLFromWebsite();
     ExchangeRatesSeries getCurrencyRate(CurrencyVM request);

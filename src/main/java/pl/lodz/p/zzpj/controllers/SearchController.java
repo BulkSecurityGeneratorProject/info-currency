@@ -17,11 +17,11 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Created by piotr on 05.09.16.
+ * REST controller fo managing search features.
  */
 @Controller
 public class SearchController {
-    Logger logger = Logger.getLogger(SearchController.class);
+    private Logger logger = Logger.getLogger(SearchController.class);
 
     public SearchManager getSearchManager() {
         return searchManager;
@@ -42,7 +42,7 @@ public class SearchController {
         SearchResponse response = new SearchResponse();
         User user = (userRepository.findOneByLogin(request.getUserPrincipal().getName())).get();
         response.setData(searchManager.getUserSearchHistory(user.getId()));
-        return new ResponseEntity<SearchResponse>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }

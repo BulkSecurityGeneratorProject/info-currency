@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import pl.lodz.p.zzpj.domain.util.Search;
 import pl.lodz.p.zzpj.model.*;
 import pl.lodz.p.zzpj.repository.SearchRepository;
-import pl.lodz.p.zzpj.utils.DateUtils;
+import pl.lodz.p.zzpj.utils.DateUtil;
 import pl.lodz.p.zzpj.vm.CurrencyVM;
 import pl.lodz.p.zzpj.xml.XMLparser;
 import pl.lodz.p.zzpj.xml.XMLparserJAXB;
@@ -37,7 +37,7 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
     private static final String CURRENCY_URL_PREFIX = "http://api.nbp.pl/api/exchangerates/rates/c/";
     private static final String FORMAT_SUFFIX = "?format=xml";
     private static final String DATE_FORMAT = "yyyy-MM-dd";
-    private ArrayList<String> notWorkingDates = new ArrayList<>();
+    private List<String> notWorkingDates;
 
     private XMLparser parser;
 
@@ -49,9 +49,11 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
     public CurrenciesManagerNBP(SearchRepository repository) {
         this.repository = repository;
         searchManager = new SearchManager(repository);
+        setUpNotWorkingDates();
     }
 
     private void setUpNotWorkingDates() {
+        notWorkingDates = new ArrayList<>();
         notWorkingDates.add("2016-01-01");
         notWorkingDates.add("2016-01-06");
         notWorkingDates.add("2016-03-25");
@@ -72,13 +74,13 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
         notWorkingDates.add("2017-11-01");
         notWorkingDates.add("2017-12-25");
         notWorkingDates.add("2017-12-26");
-    };
+    }
 
     @Override
     public String getLastCurrenciesXMLFromWebsite() {
         logger.info("getLastCurrenciesXMLFromWebsite invoked");
         String content = "";
-        URL url = null;
+        URL url;
         try {
             url = new URL(LAST_COURSES_URL);
             InputStream input = url.openStream();
@@ -94,9 +96,7 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
     public ExchangeRatesSeries getCurrencyRate(CurrencyVM request) {
         logger.info("getCurrencyRate invoked" );
         parser = new XMLparserJAXB();
-        String url = null;
-
-        setUpNotWorkingDates();
+        String url;
 
         if(request.isUpToDateRates() && (request.getCurrency() != null)) {
             makeSureDateIsValid(request);
@@ -160,7 +160,7 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
                     Calendar calendar = Calendar.getInstance();
                     calendar.add(Calendar.DATE, -1);
                     date = calendar.getTime();
-                    request.setHistoricalDate(DateUtils.getInstance().parseDateToString(date, DATE_FORMAT));
+                    request.setHistoricalDate(DateUtil.getInstance().parseDateToString(date, DATE_FORMAT));
                 }
             }
         }
@@ -182,7 +182,7 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
         Date currDate = null;
         boolean isValid = false;
         try {
-            currDate = DateUtils.getInstance().parseStringToDate(currentDate, DATE_FORMAT);
+            currDate = DateUtil.getInstance().parseStringToDate(currentDate, DATE_FORMAT);
             calendar.setTime(currDate);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -195,31 +195,28 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
             while(currDate.getDay() == 6 || currDate.getDay() == 0) {
                 calendar.add(Calendar.DATE, -1);
                 currDate = calendar.getTime();
-                currentDate = DateUtils.getInstance().parseDateToString(currDate, DATE_FORMAT);
+                currentDate = DateUtil.getInstance().parseDateToString(currDate, DATE_FORMAT);
             }
-            if(!notWorkingDates.contains(DateUtils.getInstance().parseDateToString(currDate, DATE_FORMAT))) {
+            if(!notWorkingDates.contains(DateUtil.getInstance().parseDateToString(currDate, DATE_FORMAT))) {
                 isValid = true;
             } else {
                 isValid = false;
             }
         }
 
-        return DateUtils.getInstance().parseDateToString(currDate, DATE_FORMAT);
+        return DateUtil.getInstance().parseDateToString(currDate, DATE_FORMAT);
     }
 
     @Override
     public ArrayList<ExchangeRatesSeries> getRangeRates(CurrencyVM request) {
         logger.info("getRangeRates invoked");
-        String maxDate = request.getHighHistDate();
         String currentDate = request.getLowHistDate();
-        String tempWeekDate = null;
+        String tempWeekDate;
         ExchangeRatesSeries rateForCurrentDate;
         ArrayList<ExchangeRatesSeries> ratesForDateRange = new ArrayList<>();
-        long howManyDays = calculateHowManyDays(currentDate, maxDate);
+        long howManyDays = calculateHowManyDays(currentDate, request.getHighHistDate());
         parser = new XMLparserJAXB();
-        String url = null;
-
-        setUpNotWorkingDates();
+        String url;
 
         for(int i = 0; i <= howManyDays; i++) {
             tempWeekDate = validateDate(currentDate);
@@ -243,10 +240,10 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
     }
 
     private void switchDate(ExchangeRatesSeries rate, String date) {
-        Date parsedDate = null;
+        Date parsedDate;
         try {
-            parsedDate = DateUtils.getInstance().parseStringToDate(date, DATE_FORMAT);
-            if(rate.getRates().getRate().getEffectiveDate().toString().compareTo(parsedDate.toString()) != 0) {
+            parsedDate = DateUtil.getInstance().parseStringToDate(date, DATE_FORMAT);
+            if(rate.getRates().getRate().getEffectiveDate().compareTo(parsedDate.toString()) != 0) {
                 GregorianCalendar gc = (GregorianCalendar) GregorianCalendar.getInstance();
                 gc.setTime(parsedDate);
                 rate.getRates().getRate().setEffectiveDate(DatatypeFactory.newInstance()
@@ -255,9 +252,7 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
                                                  gc.get(Calendar.DAY_OF_MONTH),
                                                  DatatypeConstants.FIELD_UNDEFINED));
             }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (DatatypeConfigurationException e) {
+        } catch (ParseException | DatatypeConfigurationException e) {
             e.printStackTrace();
         }
 
@@ -267,21 +262,21 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
         Calendar calendar = Calendar.getInstance();
         Date currDate = null;
             try {
-                currDate = DateUtils.getInstance().parseStringToDate(currentDate, DATE_FORMAT);
+                currDate = DateUtil.getInstance().parseStringToDate(currentDate, DATE_FORMAT);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
             calendar.setTime(currDate);
             calendar.add(Calendar.DATE, 1);
-            return DateUtils.getInstance().parseDateToString(calendar.getTime(), DATE_FORMAT);
+            return DateUtil.getInstance().parseDateToString(calendar.getTime(), DATE_FORMAT);
     }
 
     private long calculateHowManyDays(String lowDate, String highDate) {
         Date minDate = null;
         Date maxDate = null;
         try {
-            minDate = DateUtils.getInstance().parseStringToDate(lowDate, DATE_FORMAT);
-            maxDate = DateUtils.getInstance().parseStringToDate(highDate, DATE_FORMAT);
+            minDate = DateUtil.getInstance().parseStringToDate(lowDate, DATE_FORMAT);
+            maxDate = DateUtil.getInstance().parseStringToDate(highDate, DATE_FORMAT);
         } catch (ParseException e) {
             e.printStackTrace();
         }

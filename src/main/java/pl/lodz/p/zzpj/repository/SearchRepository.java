@@ -8,7 +8,7 @@ import pl.lodz.p.zzpj.domain.util.Search;
 import java.util.List;
 
 /**
- * Created by piotr on 05.09.16.
+ * Spring JPA search repository.
  */
 public interface SearchRepository extends JpaRepository<Search, Long> {
     @Query("from Search where userId = :id")

@@ -1,5 +1,8 @@
 package pl.lodz.p.zzpj.model;
 
+/**
+ * Currency response for view-model operations.
+ */
 public class CurrencyResponse {
     Object data;
     int statusCode;

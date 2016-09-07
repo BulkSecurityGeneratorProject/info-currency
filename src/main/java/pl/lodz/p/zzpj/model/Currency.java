@@ -1,5 +1,8 @@
 package pl.lodz.p.zzpj.model;
 
+/**
+ * Enum contains available currency symbols.
+ */
 public enum Currency {
     USD("USD"),
     EUR("EUR"),

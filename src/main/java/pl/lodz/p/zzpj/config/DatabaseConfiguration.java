@@ -17,20 +17,23 @@ import javax.inject.Inject;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 
+/**
+ * Database configuration class.
+ */
 @Configuration
 @EnableJpaRepositories("pl.lodz.p.zzpj.repository")
 @EnableJpaAuditing(auditorAwareRef = "springSecurityAuditorAware")
 @EnableTransactionManagement
 public class DatabaseConfiguration {
 
-    private final Logger log = LoggerFactory.getLogger(DatabaseConfiguration.class);
+    private final Logger logger = LoggerFactory.getLogger(DatabaseConfiguration.class);
 
     @Inject
     private Environment env;
 
 
     /**
-     * Open the TCP port for the H2 database, so it is available remotely.
+     * Opens the TCP port for the H2 database, so it is available remotely.
      *
      * @return the H2 database TCP server
      * @throws SQLException if the server failed to start
@@ -38,6 +41,7 @@ public class DatabaseConfiguration {
     @Bean(initMethod = "start", destroyMethod = "stop")
     @Profile(Constants.SPRING_PROFILE_DEVELOPMENT)
     public Server h2TCPServer() throws SQLException {
+        logger.info("Creates H2 TCP server");
         return Server.createTcpServer("-tcp","-tcpAllowOthers");
     }
 

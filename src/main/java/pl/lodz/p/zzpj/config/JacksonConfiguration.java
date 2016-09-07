@@ -16,6 +16,9 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
 
+/**
+ * Jackson configuration
+ */
 @Configuration
 public class JacksonConfiguration {
 
@@ -33,7 +36,6 @@ public class JacksonConfiguration {
     @Autowired
     private Jackson2ObjectMapperBuilder builder;
 
-    //To be replaced by a Jackson2ObjectMapperBuilderCustomizer in Spring-boot 1.4
     @PostConstruct
     public void postConstruct() {
         this.builder.serializers(new ZonedDateTimeSerializer(ISO_FIXED_FORMAT));

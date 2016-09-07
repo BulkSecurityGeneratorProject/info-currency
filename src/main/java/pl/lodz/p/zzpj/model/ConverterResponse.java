@@ -1,5 +1,8 @@
 package pl.lodz.p.zzpj.model;
 
+/**
+ * Converter response for view-model operations.
+ */
 public class ConverterResponse {
     Object data;
     int statusCode;

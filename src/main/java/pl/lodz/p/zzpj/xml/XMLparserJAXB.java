@@ -43,6 +43,7 @@ public class XMLparserJAXB implements XMLparser {
         logger.info("parseObjectToXML invoked");
         jaxbContext = JAXBContext.newInstance(ExchangeRatesSeries.class);
         stringWriter = new StringWriter();
+        marshaller = jaxbContext.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         marshaller.marshal(exchangeRatesSeries, stringWriter);
         return stringWriter.toString();

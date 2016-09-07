@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * Created by piotr on 05.09.16.
+ *
  */
 @Entity
 @Table(name = "country")

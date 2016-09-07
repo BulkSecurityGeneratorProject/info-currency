@@ -21,6 +21,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Collections;
 
+/**
+ * REST controller for managing JWT features.
+ */
 @RestController
 @RequestMapping("/api")
 public class UserJWTController {

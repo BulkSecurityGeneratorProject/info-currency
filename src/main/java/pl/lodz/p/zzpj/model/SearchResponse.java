@@ -1,7 +1,7 @@
 package pl.lodz.p.zzpj.model;
 
 /**
- * Created by piotr on 05.09.16.
+ * Search response for view-model operations.
  */
 public class SearchResponse {
     Object data;

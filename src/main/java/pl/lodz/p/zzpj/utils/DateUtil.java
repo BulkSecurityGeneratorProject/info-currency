@@ -7,18 +7,18 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class DateUtils {
-    Logger logger = Logger.getLogger(DateUtils.class);
+public class DateUtil {
+    private Logger logger = Logger.getLogger(DateUtil.class);
 
-    private static DateUtils instance;
+    private static DateUtil instance;
 
-    private DateUtils() {
+    private DateUtil() {
 
     }
 
-    public static synchronized DateUtils getInstance() {
+    public static synchronized DateUtil getInstance() {
         if(instance == null) {
-            instance = new DateUtils();
+            instance = new DateUtil();
         }
         return instance;
     }
