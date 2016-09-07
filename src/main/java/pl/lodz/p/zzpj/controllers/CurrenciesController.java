@@ -7,22 +7,15 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import pl.lodz.p.zzpj.controllers.vm.ConverterVM;
-import pl.lodz.p.zzpj.controllers.vm.CurrencyVM;
+import pl.lodz.p.zzpj.vm.ConverterVM;
+import pl.lodz.p.zzpj.vm.CurrencyVM;
 import pl.lodz.p.zzpj.managers.Converter;
 import pl.lodz.p.zzpj.managers.CurrenciesManager;
 import pl.lodz.p.zzpj.model.ConverterResponse;
-import pl.lodz.p.zzpj.model.Currency;
 import pl.lodz.p.zzpj.model.CurrencyResponse;
-import pl.lodz.p.zzpj.xml.XMLparserJAXB;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.xml.bind.JAXBException;
-import javax.xml.ws.Response;
-import java.io.IOException;
-import java.io.StringReader;
-import java.net.MalformedURLException;
 import java.util.Map;
 
 @Controller

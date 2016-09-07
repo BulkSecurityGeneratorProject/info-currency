@@ -1,4 +1,4 @@
-package pl.lodz.p.zzpj.controllers.vm;
+package pl.lodz.p.zzpj.vm;
 
 public class ConverterVM {
 

@@ -1,18 +1,14 @@
 package pl.lodz.p.zzpj.managers;
 
-import ch.qos.logback.core.util.TimeUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import org.apache.tomcat.jni.Time;
-import org.h2.mvstore.DataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.lodz.p.zzpj.domain.util.Search;
 import pl.lodz.p.zzpj.model.*;
-import pl.lodz.p.zzpj.model.Currency;
 import pl.lodz.p.zzpj.repository.SearchRepository;
 import pl.lodz.p.zzpj.utils.DateUtils;
-import pl.lodz.p.zzpj.controllers.vm.CurrencyVM;
+import pl.lodz.p.zzpj.vm.CurrencyVM;
 import pl.lodz.p.zzpj.xml.XMLparser;
 import pl.lodz.p.zzpj.xml.XMLparserJAXB;
 
@@ -20,7 +16,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
