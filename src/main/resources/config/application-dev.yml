@@ -24,6 +24,11 @@ spring:
     port: 25
     username:
     password:
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
 icurrency:
   security:
     authentication:
