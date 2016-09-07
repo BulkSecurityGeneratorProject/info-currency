@@ -92,6 +92,7 @@
                         }]
                     });
                     document.getElementById("ratesChart").style.display = "table";
+                    document.getElementById("rateTable").style.display = "none";
                 } else if(response.data) {
                     $('#bid').html(response.data.rates.rate.bid);
                     $('#ask').html(response.data.rates.rate.ask);
@@ -156,7 +157,7 @@
 
 <div class="container">
     <div class="jumbotron">
-        <h1>Oto kursy walut z dnia dzisiejszego:</h1>
+        <h1>Wybierz walutę i datę kursu:</h1>
     </div>
 
     <div id="historyButton">
