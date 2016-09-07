@@ -22,8 +22,8 @@ public class TestContext {
         return messageSource;
     }
 
-    @Bean
-    public HomePageController homePageControllerService() {
-        return Mockito.mock(HomePageController.class);
-    }
+//    @Bean
+//    public HomePageController homePageControllerService() {
+//        return Mockito.mock(HomePageController.class);
+//    }
 }
