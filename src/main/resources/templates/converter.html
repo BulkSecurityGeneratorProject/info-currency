@@ -53,6 +53,7 @@
             <li><a href="currencies">Waluty</a></li>
             <li class="active"><a href="converter">Przelicznik walut</a></li>
             <li><a href="#">Papiery wartościowe</a></li>
+            <li style="display: none" id="accountNavbarOption"><a href="account">Profil</a></li>
             <li id="loginNavbarOption"><a href="login">Zaloguj</a></li>
             <li style="display: none" id="logoutNavbarOption"><a onclick="logout()">Wyloguj</a></li>
         </ul>
@@ -155,11 +156,13 @@
             console.log('user authorized');
             document.getElementById("loginNavbarOption").style.display = "none";
             document.getElementById("logoutNavbarOption").style.display = "block";
+            document.getElementById("accountNavbarOption").style.display = "block";
         }
         else {
             console.log('user NOT authorized');
             document.getElementById("loginNavbarOption").style.display = "block";
             document.getElementById("logoutNavbarOption").style.display = "none";
+            document.getElementById("accountNavbarOption").style.display = "none";
         }
     }
     hideLoginOption();

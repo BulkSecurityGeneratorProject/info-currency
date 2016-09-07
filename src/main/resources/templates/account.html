@@ -1,0 +1,102 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+<script>
+
+</script>
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Info-currency</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a href="/">Strona główna</a></li>
+            <li><a href="currencies">Waluty</a></li>
+            <li><a href="converter">Przelicznik walut</a></li>
+            <li><a href="#">Papiery wartościowe</a></li>
+            <li style="display: none" id="accountNavbarOption"><a href="account">Profil</a></li>
+            <li id="loginNavbarOption" class="active"><a href="login">Zaloguj</a></li>
+            <li style="display: none" id="logoutNavbarOption"><a onclick="logout()">Wyloguj</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="row">
+    <div class="container">
+        <div class="col-md-8 col-md-offset-2">
+            <h1>Profil</h1>
+            <h3>Login</h3>
+            <h4 id="userLogin"></h4>
+            <br>
+            <h3>Imię</h3>
+            <h4 id="userFirstName"></h4>
+            <br>
+            <h3>Nazwisko</h3>
+            <h4 id="userLastName"></h4>
+            <br>
+            <h3>e-mail</h3>
+            <h4 id="userEMail"></h4>
+            <br>
+            <h3>język</h3>
+            <h4 id="userLanguage"></h4>
+        </div>
+    </div>
+</div>
+
+<script>
+    function readUserDataFromLocalStorage() {
+        return JSON.parse(sessionStorage.userData);
+    }
+
+    function hideLoginOption() {
+        console.log('hiding login option');
+        if (sessionStorage.userData) {
+            console.log('user authorized');
+            document.getElementById("loginNavbarOption").style.display = "none";
+            document.getElementById("logoutNavbarOption").style.display = "block";
+            document.getElementById("accountNavbarOption").style.display = "block";
+        }
+        else {
+            console.log('user NOT authorized');
+            document.getElementById("loginNavbarOption").style.display = "block";
+            document.getElementById("logoutNavbarOption").style.display = "none";
+            document.getElementById("accountNavbarOption").style.display = "none";
+        }
+    }
+    hideLoginOption();
+
+    function logout() {
+        console.log('Cleaning session storage');
+        sessionStorage.clear();
+        hideLoginOption();
+        redirectHome();
+    }
+
+    function redirectHome() {
+        window.location.href = '/';
+    }
+
+    function printUserData() {
+        $('#userInfoParagraph').text(readUserDataFromLocalStorage());
+        $('#userLogin').text(readUserDataFromLocalStorage().login);
+        $('#userEMail').text(readUserDataFromLocalStorage().email);
+        $('#userFirstName').text(readUserDataFromLocalStorage().firstName);
+        $('#userLastName').text(readUserDataFromLocalStorage().lastName);
+        $('#userLanguage').text(readUserDataFromLocalStorage().langKey);
+    }
+    printUserData();
+</script>
+
+</body>
+
+</html>

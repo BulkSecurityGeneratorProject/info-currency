@@ -8,10 +8,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 public class LoginController {
-    public static final String LOGIN_VIEW = "login";
+    private static final String LOGIN_VIEW = "login";
+    private static final String ACCOUNT_VIEW = "account";
 
     @RequestMapping("login")
-    public String getLoginPage(){
+    public String getLoginPage() {
         return LOGIN_VIEW;
+    }
+
+    @RequestMapping("account")
+    public String getAccountPage() {
+        return ACCOUNT_VIEW;
     }
 }
