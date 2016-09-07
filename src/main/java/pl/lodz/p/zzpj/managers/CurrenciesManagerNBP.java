@@ -116,10 +116,10 @@ public class CurrenciesManagerNBP implements CurrenciesManager {
     }
 
     @Override
-    public CurrencyResponse getRatesDependsOnParams(CurrencyVM request) {
+    public CurrencyResponse getRatesDependsOnParams(CurrencyVM request, Long userId) {
         logger.info("getRatesDependsOnParams invoked" );
         CurrencyResponse currencyResponse = new CurrencyResponse();
-        searchManager.saveSearchHistoryItem(new Search(request, 1));
+        searchManager.saveSearchHistoryItem(new Search(request, userId));
         if(request.getLowHistDate() != null && request.getHighHistDate() != null) {
             ArrayList<ExchangeRatesSeries> rangeRates = getRangeRates(request);
             currencyResponse.setData(rangeRates);

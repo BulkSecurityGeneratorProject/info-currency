@@ -46,6 +46,7 @@
             contentType: "application/json",
             data: JSON.stringify(JSONObject),
             dataType: "json",
+            headers: {"Authorization": "Bearer " + sessionStorage.userToken},
             success:function (response,textStatus,jqXHR) {
                 if(response.data.length > 0) {
                     //var jsonData = $.parseJSON(response);
@@ -119,6 +120,7 @@
             url: "/history/get",
             type: "GET",
             dataType: "json",
+            headers: {"Authorization": "Bearer " + sessionStorage.userToken},
             success: function(response) {
                 if(response.data) {
                     var tr;

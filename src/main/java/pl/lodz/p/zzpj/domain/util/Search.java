@@ -19,7 +19,7 @@ public class Search implements Serializable {
     private Long id;
 
     @Column(name = "user_id")
-    private int userId;
+    private Long userId;
 
     @Column(name = "currency")
     private String currency;
@@ -36,7 +36,7 @@ public class Search implements Serializable {
     @Column(name = "high_hist_date")
     private String highHistDate;
 
-    public Search(CurrencyVM request, int userId) {
+    public Search(CurrencyVM request, Long userId) {
         this.userId = userId;
         this.currency = request.getCurrency();
         this.upToDateRates = request.isUpToDateRates();

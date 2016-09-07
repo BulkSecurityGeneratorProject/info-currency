@@ -12,5 +12,5 @@ import java.util.List;
  */
 public interface SearchRepository extends JpaRepository<Search, Long> {
     @Query("from Search where userId = :id")
-    List<Search> getUserSearchHistory(@Param("id") int id);
+    List<Search> getUserSearchHistory(@Param("id") Long id);
 }
