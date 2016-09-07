@@ -1,0 +1,31 @@
+server:
+  port: 8081
+spring:
+  datasource:
+    url: jdbc:h2:mem:./target/h2db/db/info-currency;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1
+    name:
+    username: info-currency
+    password:
+  h2:
+    console:
+      enabled: false
+  jpa:
+    database-platform: pl.lodz.p.zzpj.domain.util.FixedH2Dialect
+    database: H2
+    show-sql: true
+    properties:
+      hibernate.cache.use_second_level_cache: false
+      hibernate.cache.use_query_cache: false
+      hibernate.generate_statistics: false
+    hibernate:
+      ddl-auto: create
+  mail:
+    host: localhost
+    port: 25
+    username:
+    password:
+icurrency:
+  security:
+    authentication:
+      jwt:
+        secret: my-secret-token-to-change-in-production

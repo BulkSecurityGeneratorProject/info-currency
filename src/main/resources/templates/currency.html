@@ -1,0 +1,115 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Info-currency</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a href="/">Strona główna</a></li>
+            <li class="active"><a href="currencies">Waluty</a></li>
+            <li><a href="converter">Przelicznik walut</a></li>
+            <li><a href="#">Papiery wartościowe</a></li>
+            <li style="display: none" id="accountNavbarOption"><a href="account">Profil</a></li>
+            <li id="loginNavbarOption"><a href="login">Zaloguj</a></li>
+            <li style="display: none" id="logoutNavbarOption"><a onclick="logout()">Wyloguj</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="jumbotron">
+        <h1>Oto kursy walut z dnia dzisiejszego:</h1>
+    </div>
+
+    <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Wybierz walutę:
+            <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+            <li><a href="#">EUR</a></li>
+            <li><a href="#">USD</a></li>
+            <li><a href="#">CHF</a></li>
+            <li><a href="#">JPY</a></li>
+            <li><a href="#">AUD</a></li>
+            <li><a href="#">CAD</a></li>
+            <li><a href="#">DKK</a></li>
+            <li><a href="#">NOK</a></li>
+            <li><a href="#">SEK</a></li>
+        </ul>
+    </div>
+</div>
+
+
+
+<div align="center" class="container">
+    <table class="table table-striped table-hover table-sm">
+        <tr>
+            <th> SYMBOL </th>
+            <td> {{currencyRates.code}}</td>
+        </tr>
+        <tr>
+            <th> NAZWA</th>
+            <td> {{currencyRates.currency}}</td>
+        </tr>
+        <tr class="success">
+            <td> DZISIEJSZE KURSY</td>
+        </tr>
+        <tr class="active">
+            <th> KUPNO</th>
+            <td> {{currencyRates.rates.rate.bid }}</td>
+        </tr>
+        <tr class="danger">
+            <th> SPRZEDAŻ</th>
+            <td> {{currencyRates.rates.rate.ask }}</td>
+        </tr>
+    </table>
+</div>
+
+<script>
+    function readUserDataFromLocalStorage() {
+        return JSON.parse(sessionStorage.userData);
+    }
+
+    function hideLoginOption() {
+        console.log('hiding login option');
+        if (sessionStorage.userData) {
+            console.log('user authorized');
+            document.getElementById("loginNavbarOption").style.display = "none";
+            document.getElementById("logoutNavbarOption").style.display = "block";
+            document.getElementById("accountNavbarOption").style.display = "block";
+        }
+        else {
+            console.log('user NOT authorized');
+            document.getElementById("loginNavbarOption").style.display = "block";
+            document.getElementById("logoutNavbarOption").style.display = "none";
+            document.getElementById("accountNavbarOption").style.display = "none";
+        }
+    }
+    hideLoginOption();
+
+    function logout() {
+        console.log('Cleaning session storage');
+        sessionStorage.clear();
+        hideLoginOption();
+        redirectHome();
+    }
+
+    function redirectHome() {
+        window.location.href = '/';
+    }
+</script>
+
+</body>
+
+</html>
