@@ -148,7 +148,8 @@
             <li class="active"><a href="currencies">Waluty</a></li>
             <li><a href="converter">Przelicznik walut</a></li>
             <li><a href="#">Papiery wartościowe</a></li>
-            <li><a href="login">Zaloguj</a></li>
+            <li id="loginNavbarOption"><a href="login">Zaloguj</a></li>
+            <li style="display: none" id="logoutNavbarOption"><a onclick="logout()">Wyloguj</a></li>
         </ul>
     </div>
 </nav>
@@ -292,6 +293,38 @@
         document.getElementById("ratesChart").style.display = "none";
     </script>
 </div>
+
+<script>
+    function readUserDataFromLocalStorage() {
+        return JSON.parse(sessionStorage.userData);
+    }
+
+    function hideLoginOption() {
+        console.log('hiding login option');
+        if (sessionStorage.userData) {
+            console.log('user authorized');
+            document.getElementById("loginNavbarOption").style.display = "none";
+            document.getElementById("logoutNavbarOption").style.display = "block";
+        }
+        else {
+            console.log('user NOT authorized');
+            document.getElementById("loginNavbarOption").style.display = "block";
+            document.getElementById("logoutNavbarOption").style.display = "none";
+        }
+    }
+    hideLoginOption();
+
+    function logout() {
+        console.log('Cleaning session storage');
+        sessionStorage.clear();
+        hideLoginOption();
+        redirectHome();
+    }
+
+    function redirectHome() {
+        window.location.href = '/';
+    }
+</script>
 
 </body>
 

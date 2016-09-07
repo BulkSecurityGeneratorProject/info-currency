@@ -31,7 +31,7 @@
                     if (response.id_token) {
                         console.log('Token: ', response.id_token);
                         hideErrorAlert();
-                        window.userToken = response.id_token;
+                        sessionStorage.userToken = response.id_token;
                         getUserInfo();
                     }
                     else {
@@ -54,14 +54,15 @@
             type: "GET",
             contentType: "application/json",
             dataType: "json",
-            headers: {"Authorization": "Bearer " + window.userToken},
+            headers: {"Authorization": "Bearer " + sessionStorage.userToken},
             success: function (response, textStatus, jqXHR) {
                 if (response) {
                     console.log('response: ', response);
-                    if (response.id_token) {
-                        console.log('Token: ', response.id_token);
+                    if (response.login) {
+                        console.log('Token: ', response);
                         hideErrorAlert();
-                        window.userToken = response.id_token;
+                        writeUserDataToLocalStorage(response);
+                        redirectHome()
                     }
                     else {
                         showErrorAlert()
@@ -84,6 +85,39 @@
     function hideErrorAlert() {
         document.getElementById("loginErrorAlert").style.display = "none";
     }
+
+    function redirectHome() {
+        window.location.href = '/';
+    }
+
+    function writeUserDataToLocalStorage(userData) {
+        sessionStorage.userData = JSON.stringify(userData);
+    }
+
+    function readUserDataFromLocalStorage() {
+        return JSON.parse(sessionStorage.userData);
+    }
+
+    function hideLoginOption() {
+        console.log('hiding login option');
+        if (sessionStorage.userData) {
+            console.log('user authorized');
+            document.getElementById("loginNavbarOption").style.display = "none";
+            document.getElementById("logoutNavbarOption").style.display = "block";
+        }
+        else {
+            console.log('user NOT authorized');
+            document.getElementById("loginNavbarOption").style.display = "block";
+            document.getElementById("logoutNavbarOption").style.display = "none";
+        }
+    }
+
+    function logout() {
+        sessionStorage.userToken = undefined;
+        sessionStorage.userData = undefined;
+        hideLoginOption();
+        redirectHome();
+    }
 </script>
 
 <nav class="navbar navbar-inverse">
@@ -96,7 +130,8 @@
             <li><a href="currencies">Waluty</a></li>
             <li><a href="converter">Przelicznik walut</a></li>
             <li><a href="#">Papiery wartościowe</a></li>
-            <li><a class="active" href="login">Zaloguj</a></li>
+            <li id="loginNavbarOption" class="active"><a href="login">Zaloguj</a></li>
+            <li style="display: none" id="logoutNavbarOption"><a onclick="logout()">Wyloguj</a></li>
         </ul>
     </div>
 </nav>

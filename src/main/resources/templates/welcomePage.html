@@ -20,19 +20,66 @@
             <li><a href="currencies">Waluty</a></li>
             <li><a href="converter">Przelicznik walut</a></li>
             <li><a href="#">Papiery wartościowe</a></li>
-            <li><a href="login">Zaloguj</a></li>
+            <li id="loginNavbarOption"><a href="login">Zaloguj</a></li>
+            <li style="display: none" id="logoutNavbarOption"><a onclick="logout()">Wyloguj</a></li>
         </ul>
     </div>
 </nav>
 
 <div class="container">
     <div class="jumbotron">
-        <h1>Witaj Gościu!</h1>
-        <p>Zaloguj się aby skorzystać z wszystkich funkcjonalności aplikacji.</p>
+        <h1 id="greetingMessageHeader">Witaj Gościu!</h1>
+        <p id="greetingMessageParagraph">Zaloguj się aby skorzystać z wszystkich funkcjonalności aplikacji.</p>
     </div>
     <p>kursy walut</p>
     <p>i inne...</p>
 </div>
+
+<script>
+    function readUserDataFromLocalStorage() {
+        return JSON.parse(sessionStorage.userData);
+    }
+
+    function hideLoginOption() {
+        console.log('hiding login option');
+        if (sessionStorage.userData) {
+            console.log('user authorized');
+            document.getElementById("loginNavbarOption").style.display = "none";
+            document.getElementById("logoutNavbarOption").style.display = "block";
+            showCustomGreeting();
+        }
+        else {
+            console.log('user NOT authorized');
+            document.getElementById("loginNavbarOption").style.display = "block";
+            document.getElementById("logoutNavbarOption").style.display = "none";
+            showAnonymusGreeting();
+        }
+    }
+    hideLoginOption();
+
+    function logout() {
+        console.log('Cleaning session storage');
+        sessionStorage.clear();
+        hideLoginOption();
+        redirectHome();
+    }
+
+    function redirectHome() {
+        window.location.href = '/';
+    }
+
+    function showCustomGreeting() {
+        console.log('UserData: ', readUserDataFromLocalStorage());
+        $('#greetingMessageHeader').text("Witaj " + readUserDataFromLocalStorage().firstName + "!");
+        document.getElementById("greetingMessageParagraph").style.display = "none";
+    }
+
+    function showAnonymusGreeting() {
+        $('#greetingMessageHeader').text("Witaj Gościu!");
+        document.getElementById("greetingMessageParagraph").style.display = "block";
+    }
+</script>
+
 </body>
 
 </html>
