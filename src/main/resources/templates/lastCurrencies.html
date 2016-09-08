@@ -92,8 +92,15 @@
                             data: asks
                         }]
                     });
+                    if(response.averageBid) {
+                        $('#avBid').html(response.averageBid);
+                    }
+                    if(response.averageAsk) {
+                        $('#avAsk').html(response.averageAsk);
+                    }
                     document.getElementById("ratesChart").style.display = "table";
                     document.getElementById("rateTable").style.display = "none";
+                    document.getElementById("averageRates").style.display = "table";
                 } else if(response.data) {
                     $('#bid').html(response.data.rates.rate.bid);
                     $('#ask').html(response.data.rates.rate.ask);
@@ -102,8 +109,11 @@
                     $('#rateDate').html(response.data.rates.rate.effectiveDate);
                     document.getElementById("rateTable").style.display = "block";
                     document.getElementById("ratesChart").style.display = "none";
+                    document.getElementById("averageRates").style.display = "none";
                 } else {
                     document.getElementById("rateTable").style.display = "none";
+                    document.getElementById("ratesChart").style.display = "none";
+                    document.getElementById("averageRates").style.display = "none";
                     alert("Błędne parametry wyszukiwania!!!!")
                 }
             },
@@ -150,7 +160,6 @@
             <li><a href="/">Strona główna</a></li>
             <li class="active"><a href="currencies">Waluty</a></li>
             <li><a href="converter">Przelicznik walut</a></li>
-            <li><a href="#">Papiery wartościowe</a></li>
             <li style="display: none" id="accountNavbarOption"><a href="account">Profil</a></li>
             <li id="loginNavbarOption"><a href="login">Zaloguj</a></li>
             <li style="display: none" id="logoutNavbarOption"><a onclick="logout()">Wyloguj</a></li>
@@ -292,9 +301,25 @@
     </script>
 </div>
 
-<div id="ratesChart" style="min-width: 600px; height: 400px; margin: 0 auto">
+<div id="ratesChart" style="min-width: 800px; height: 400px; margin: 0 auto">
     <script>
         document.getElementById("ratesChart").style.display = "none";
+    </script>
+</div>
+
+<div class="container" align="center" id="averageRates">
+    <table class="table">
+        <tr>
+            <th>Średnia kupna</th>
+            <td id="avBid"></td>
+        </tr>
+        <tr>
+            <th>Średnia sprzedaży</th>
+            <td id="avAsk"></td>
+        </tr>
+    </table>
+    <script>
+        document.getElementById("averageRates").style.display = "none";
     </script>
 </div>
 
